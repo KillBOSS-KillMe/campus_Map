@@ -1,0 +1,382 @@
+/* 
+<!-- 阴影边框
+box-shadow: #f1fefb 1rpx 1rpx 10rpx 5rpx; -->
+
+<!-- 
+flexflexflexflexflexflexflexflex
+display: flex;
+align-items: center;
+justify-content: space-between; -->
+
+<!-- 竖向
+display: flex;
+align-items: center;
+justify-content: space-between;
+flex-direction: column; -->
+
+<!-- 换行
+display: flex;
+align-items: center;
+justify-content: space-between;
+flex-direction: row;
+flex-wrap: wrap; -->
+
+<!-- 
+换行隐藏
+overflow : hidden;
+text-overflow: ellipsis;
+display: -webkit-box;
+-webkit-line-clamp: 2;
+-webkit-box-orient: vertical; -->
+
+<!-- 
+居右
+flex-direction:row;
+justify-content:flex-end
+vertical-align:middle; -->
+
+<!-- 
+自动换行
+word-break:break-all; -->
+
+<!-- 单行文本溢出
+overflow:hidden;
+text-overflow:ellipsis;
+white-space:nowrap; -->
+
+<!-- 多行文本溢出 -->
+<!-- -webkit-line-clamp: 2;
+display: -webkit-box;
+-webkit-box-orient: vertical;
+overflow: hidden;
+text-overflow: ellipsis; --> */
+
+
+
+html,
+body {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+/* 顶部信息展示 */
+.topInfo {
+    position: fixed;
+    left: 10px;
+    top: 10px;
+    width: 83%;
+    height: 45px;
+    padding: 0 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    border: 1px solid #CECECE;
+    box-shadow: #f1fefb 1rpx 1rpx 10rpx 5rpx;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.topInfo img {
+    width: 12.5px;
+    height: 12.5px;
+}
+
+/* 选择部分 */
+.elData {
+    z-index: 9999;
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+.elData .elDataBg {
+    width: 100vw;
+    height: 100vh;
+    background: rgba(51, 51, 51, .5);
+}
+.elData .elDataCon {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100vw;
+    height: auto;
+    padding: 20px 0;
+    background-color: #fff;
+    border-radius: 10px 10px 0 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: column;
+}
+.elData .elDataCon h4 {
+    font-size: 14px;
+    color: #333;
+    font-weight: 700;
+}
+.elData .elDataCon .fence {
+    padding: 30px 0;
+    width: 100%;
+}
+.elData .elDataCon .fence li {
+    position: relative;
+    width: 100%;
+    padding: 20px 0;
+    font-size: 14px;
+    color: #989898;
+    border-bottom: 1px solid #989898;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.elData .elDataCon .fence li .icon {
+    display: none;
+}
+.elData .elDataCon .fence .active {
+    font-size: 18px;
+    font-weight: 700;
+    color: #333;
+}
+.elData .elDataCon .fence .active .icon {
+    position: absolute;
+    display: block;
+    top: 20px;
+    right: 30px;
+    width: 15px;
+    height: 12.5px;
+}
+.elData .elDataCon .sub {
+    width: 85%;
+    height: 44px;
+    border-radius: 44px;
+    background-color: #3a79f7;
+    border-width: 0;
+    color: #fff;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.elData .elDataCon .timeSel {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.elData .elDataCon .timeSel .deviceList {
+    width: 30%;
+    height: auto;
+}
+.elData .elDataCon .timeSel .deviceList li {
+    width: 100%;
+    padding: 20px 10px;
+    background-color: #F3F3F3;
+    font-size: 14.5px;
+    color: #333;
+}
+.elData .elDataCon .timeSel .deviceList .active {
+    background-color: #fff;
+}
+.elData .elDataCon .timeSel .trackTime {
+    width: 50%;
+    height: auto;
+}
+.elData .elDataCon .timeSel .trackTime li {
+    position: relative;
+    width: 100%;
+    padding: 20px 0;
+    font-size: 14px;
+    color: #989898;
+    border-bottom: 1px solid #989898;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.elData .elDataCon .timeSel .trackTime li .icon {
+    display: none;
+}
+.elData .elDataCon .timeSel .trackTime .active {
+    font-size: 18px;
+    font-weight: 700;
+    color: #333;
+}
+.elData .elDataCon .timeSel .trackTime .active .icon {
+    position: absolute;
+    display: block;
+    top: 20px;
+    right: 30px;
+    width: 15px;
+    height: 12.5px;
+}
+
+/* 地图切换部分 */
+.selMayType {
+    position: fixed;
+    /* top:10px; */
+    left: 10vw;
+    right: 10vw;
+    bottom: 50px;
+    width: 80vw;
+    height: 30px;
+    border-right: 1px solid #CECECE;
+    overflow: hidden;
+    background-color: #fff;
+    border-radius: 40px;
+    box-shadow: #ddd 1rpx 1rpx 10rpx 5rpx;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+}
+.selMayType li {
+    width: 33.333%;
+    height: 30px;
+    border-right: 1px solid #CECECE;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.selMayType li:nth-child(3) {
+    border-width: 0px;
+}
+.selMayType .active {
+    color: #3A79F7;
+}
+.selMayType img {
+    width: 15px;
+    height: 15px;
+    margin-right: 5px;
+}
+.mapCon {
+    width: 100%;
+    height: 100%;
+}
+
+/* 围栏部分 */
+
+/* 围栏编辑--按钮 */
+.editButton {
+    position: fixed;
+    right: 10px;
+    bottom: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: column; 
+}
+.editButton button {
+    width: 90px;
+    height: 30px;
+    border-radius: 10px;
+    background-color: #fff;
+    border: 1px solid #E0E0E0;
+    color: #333;
+    margin: 5px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.editButton button  img {
+    width: 10px;
+    height: 10px;
+    margin-right: 5px;
+}
+/* 创建围栏 */
+.newFance {
+    position: fixed;
+    right: 20px;
+    bottom: 100px;
+    width: 50px;
+    height: 50px;
+}
+/* 围栏编辑--属性 */
+.fenceInfo {
+    position: fixed;
+    bottom: 10px;
+    left: 0;
+    right: 0;
+    z-index: 999;
+}
+.fenceInfoCon {
+    position: relative;
+    width: 95%;
+    height: 95px;
+    padding: 20px 0;
+    margin: auto    ;
+    border-radius: 20px;
+    border: 1px solid #CECECE;
+    box-shadow: #f1fefb 1rpx 1rpx 10rpx 5rpx;
+    background-color: #fff;
+}
+.fenceInfoCon button{
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 45px;
+    height: 20px;
+    border-radius: 15px;
+    border: 1px solid #FF592D;
+    color: #FF592D;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.fenceInfoCon h4 {
+    color: #333;
+    font-size: 15px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.fenceInfoCon h4 img {
+    width: 10px;
+    height: 10px;
+    margin-left: 10px;
+}
+.fenceInfoCon ul {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.fenceInfoCon li {
+    margin-top: 10px;
+    width: 24.5%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: column;
+}
+.fenceInfoCon li div {
+    width: 45px;
+    height: 45px;
+    margin: 10px 0;
+    color: #fff;
+    border-radius: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.fenceInfoCon li:nth-child(1) div {
+    background-color: #6B95F3;
+}
+.fenceInfoCon li:nth-child(2) div {
+    background-color: #17C7AA;
+}
+.fenceInfoCon li:nth-child(3) div {
+    background-color: #00BCFF;
+}
+.fenceInfoCon li:nth-child(4) div {
+    background-color: #ED9B36;
+}
+.fenceInfoCon li span {
+    width: 100%;
+    text-align: center;
+    border-right: 1px solid #CECECE;
+}
+.fenceInfoCon li:nth-child(4) span {
+    border-right-width: 0;
+}

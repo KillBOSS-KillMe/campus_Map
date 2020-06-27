@@ -1,0 +1,75 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+    <title>轨迹回放</title>
+
+    <link rel="stylesheet" href="./css/reset.css" />
+    <link rel="stylesheet" href="./css/map.css" />
+    <!-- <link rel="stylesheet" href="https://a.amap.com/jsapi_demos/static/demo-center/css/demo-center.css"/> -->
+</head>
+
+<body>
+    <div class="mapCon" id="container"></div>
+    <div class="topInfo">
+        <span>选择</span>
+        <img src="./image/right.png" alt="">
+    </div>
+    <div class="elData">
+        <div class="elDataBg"></div>
+        <div class="elDataCon">
+            <h4>选择设备和时间</h4>
+            <div class="timeSel">
+                <ul class="deviceList">
+                    <li>设备1</li>
+                    <li class="active">设备1</li>
+                    <li>设备1</li>
+                </ul>
+                <ul class="trackTime">
+                    <li>6月5日</li>
+                    <li class="active">
+                        6月5日
+                        <img class="icon" src="./image/active.png" alt="">
+                    </li>
+                    <li>6月5日</li>
+                    <li>6月5日</li>
+                </ul>
+            </div>
+            <button class="sub">确定</button>
+        </div>
+    </div>
+    <ul class="selMayType">
+        <li>
+            <img src="./image/location.png" alt="">
+            实时定位
+        </li>
+        <li>
+            <img src="./image/track.png" alt="">
+            轨迹回放
+        </li>
+        <li class="active">
+            <img src="./image/fenceActive.png" alt="">
+            电子围栏
+        </li>
+    </ul>
+    <!-- <div class="input-card">
+    <h4>轨迹回放控制</h4>
+    <div class="input-item">
+        <input type="button" class="btn" value="开始动画" id="start" onclick="startAnimation()"/>
+        <input type="button" class="btn" value="暂停动画" id="pause" onclick="pauseAnimation()"/>
+    </div>
+    <div class="input-item">
+        <input type="button" class="btn" value="继续动画" id="resume" onclick="resumeAnimation()"/>
+        <input type="button" class="btn" value="停止动画" id="stop" onclick="stopAnimation()"/>
+    </div>
+</div> -->
+    <!-- <script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.15&key=b1e64030afdd4f85f35e3da7ffb33078"></script> -->
+
+</body>
+<script src="./js/webapi.js"></script>
+<script src="./js/track.js"></script>
+
+</html>
