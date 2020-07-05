@@ -96,7 +96,7 @@ body {
     height: 100vh;
     background: rgba(51, 51, 51, .5);
 }
-.elData .elDataCon {
+.elData .elDataCon, .elData .elDataConPath {
     position: fixed;
     left: 0;
     bottom: 0;
@@ -110,35 +110,40 @@ body {
     justify-content: space-between;
     flex-direction: column;
 }
-.elData .elDataCon h4 {
+.elData .elDataCon h4, .elData  .elDataConPath  h4{
     font-size: 14px;
     color: #333;
     font-weight: 700;
 }
-.elData .elDataCon .fence {
+.elData .elDataCon, .elData .elDataConPath {
     padding: 30px 0;
     width: 100%;
 }
-.elData .elDataCon .fence li {
+.elData .elDataCon ul, .elData .elDataConPath ul {
+    width: 100%;
+}
+.elData .elDataCon li, .elData .elDataConPath li {
     position: relative;
     width: 100%;
     padding: 20px 0;
     font-size: 14px;
     color: #989898;
-    border-bottom: 1px solid #989898;
     display: flex;
     align-items: center;
     justify-content: center;
 }
-.elData .elDataCon .fence li .icon {
+.elData .elDataCon li {
+    border-bottom: 1px solid #989898;
+}
+.elData .elDataCon li .icon, .elData .elDataConPath li .icon {
     display: none;
 }
-.elData .elDataCon .fence .active {
+.elData .elDataCon .active, .elData .elDataConPath .active {
     font-size: 18px;
     font-weight: 700;
     color: #333;
 }
-.elData .elDataCon .fence .active .icon {
+.elData .elDataCon .active .icon, .elData .elDataConPath .active .icon {
     position: absolute;
     display: block;
     top: 20px;
@@ -146,7 +151,7 @@ body {
     width: 15px;
     height: 12.5px;
 }
-.elData .elDataCon .sub {
+.elData .elDataCon .sub, .elData .elDataConPath .sub {
     width: 85%;
     height: 44px;
     border-radius: 44px;
@@ -160,50 +165,49 @@ body {
 }
 
 
-.elData .elDataCon .timeSel {
+.elData .elDataConPath .timeSel {
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
 }
-.elData .elDataCon .timeSel .deviceList {
+.elData .elDataConPath .timeSel .deviceList {
     width: 30%;
     height: auto;
 }
-.elData .elDataCon .timeSel .deviceList li {
+.elData .elDataConPath .timeSel .deviceList li {
     width: 100%;
-    padding: 20px 10px;
+    padding: 20px 0px;
     background-color: #F3F3F3;
     font-size: 14.5px;
     color: #333;
 }
-.elData .elDataCon .timeSel .deviceList .active {
+.elData .elDataConPath .timeSel .deviceList .active {
     background-color: #fff;
 }
-.elData .elDataCon .timeSel .trackTime {
-    width: 50%;
+.elData .elDataConPath .timeSel .trackTime {
+    width: 70%;
     height: auto;
 }
-.elData .elDataCon .timeSel .trackTime li {
+.elData .elDataConPath .timeSel .trackTime li {
     position: relative;
     width: 100%;
     padding: 20px 0;
     font-size: 14px;
     color: #989898;
-    border-bottom: 1px solid #989898;
     display: flex;
     align-items: center;
     justify-content: center;
 }
-.elData .elDataCon .timeSel .trackTime li .icon {
+.elData .elDataConPath .timeSel .trackTime li .icon {
     display: none;
 }
-.elData .elDataCon .timeSel .trackTime .active {
+.elData .elDataConPath .timeSel .trackTime .active {
     font-size: 18px;
     font-weight: 700;
     color: #333;
 }
-.elData .elDataCon .timeSel .trackTime .active .icon {
+.elData .elDataConPath .timeSel .trackTime .active .icon {
     position: absolute;
     display: block;
     top: 20px;
@@ -380,3 +384,134 @@ body {
 .fenceInfoCon li:nth-child(4) span {
     border-right-width: 0;
 }
+
+.deviceInfo {
+    position: fixed;
+    top: 30px;
+    left: 10px;
+    width: 83%;
+    height: auto;
+    padding: 10px 20px;
+    border-radius: 10px;
+    box-shadow: #f1fefb 1rpx 1rpx 10rpx 5rpx;
+    background-color: #fff;
+}
+.deviceInfo .item {
+    width: 100%;
+    height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.deviceInfo .item .img {
+    width: 35px;
+    height: 35px;
+    border-radius: 35px;
+    margin-right: 10px;
+    overflow: hidden; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.deviceInfo .item .img img{
+    width: 35px;
+    height: 35px;
+    border-radius: 35px;
+}
+.deviceInfo .item:nth-child(2) .img img{
+    width: 22.5px;
+    height: 22.5px;
+}
+.deviceInfo .item .mainInfo {
+    width: 210px;
+    height: 35px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-direction: column;
+}
+.deviceInfo .item .mainInfo h4 {
+    font-size: 15px;
+    color: #333;
+}
+.deviceInfo .item:nth-child(2) .mainInfo {
+    margin-top: 10px;
+}
+.deviceInfo .item .mainInfo img {
+    width: 18px;
+    height: 10px;
+    margin-right: 3px;
+}
+.deviceInfo .item .mainInfo .time {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+.deviceInfo .item .mainInfo .address {
+    padding-right: 10px;
+    font-size: 15px;
+    color: #4E4E4E;
+}
+.deviceInfo .item .operating {
+    width: 60px;
+    height: 45px;
+    padding-left: 10px;
+    display: flex;
+    align-items: center;
+}
+.deviceInfo .item:nth-child(1) .operating {
+    justify-content: center;
+}
+.deviceInfo .item:nth-child(2) .operating {
+    justify-content: space-between;
+    flex-direction: column;
+}
+.deviceInfo .item:nth-child(1) .operating span {
+    width: auto;
+    height: auto;
+    padding: 3px 5px;
+    background-color: #3A79F7;
+    font-size: 12px;
+    color: #333;
+    border-radius: 20px;
+}
+.deviceInfo .item:nth-child(2) .operating  {
+    border-left: 1px solid #B5B5B5;
+}
+.deviceInfo .item:nth-child(2) .operating img {
+    width: 25px;
+    height: 25px;
+}
+.deviceInfo .item:nth-child(2) .operating span {
+    font-size: 12.85px;
+    color: #333;
+    
+}
+/* <div class="deviceInfo">
+    <div class="item">
+      <div class="img">
+        <img src="./image/newFance.png" alt="">
+      </div>
+      <div class="mainInfo">
+        <h4>名称名称</h4>
+        <div>
+          <img class="power" src="./image/active.png" alt="">
+          80%
+        </div>
+      </div>
+      <div class="operating">
+        <span class="tiem">5小时前</span>
+      </div>
+    </div>
+    <div class="item">
+      <div class="img">
+        <img src="./image/newFance.png" alt="">
+      </div>
+      <div class="mainInfo">
+        <span>陕西省西安市雁塔区软件新城软件公寓</span>
+      </div>
+      <div class="operating">
+        <span>更换位置</span>
+      </div>
+    </div>
+  </div> */

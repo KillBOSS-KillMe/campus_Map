@@ -1,0 +1,98 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+  <title>实时定位</title>
+  <link rel="stylesheet" href="./css/reset.css" />
+  <link rel="stylesheet" href="./css/map.css" />
+  <script src="./js/vue.min.js"></script>
+  <script src="./js/PolyEditor.js"></script>
+  <script src="./js/demoutils.js"></script>
+</head>
+
+<body class="fanceDom">
+  <div class="mapCon" id="container"></div>
+  <div class="deviceInfo">
+    <div class="item">
+      <div class="img">
+        <img src="./image/newFance.png" alt="" />
+      </div>
+      <div class="mainInfo">
+        <h4>名称名称</h4>
+        <div>
+          <img class="power" src="./image/power.png" alt="" />
+          80%
+        </div>
+      </div>
+      <div class="operating">
+        <span class="tiem">5小时前</span>
+      </div>
+    </div>
+    <div class="item">
+      <div class="img">
+        <img src="./image/wifi.png" alt="" />
+        <!-- <img src="./image/GPS.png" alt="" />
+        <img src="./image/station.png" alt="" /> -->
+      </div>
+      <div class="mainInfo">
+        <span class="address">陕西省西安市雁塔区软件新城软件公寓</span>
+      </div>
+      <div class="operating">
+        <img src="./image/refresh.png" alt="" />
+        <span>更换位置</span>
+      </div>
+    </div>
+  </div>
+  <div class="elData" style="display: none;">
+    <div class="elDataBg"></div>
+    <div class="elDataCon">
+      <h4>选择电子围栏</h4>
+      <ul>
+        <li>南窑头</li>
+        <li class="active">
+          南窑头
+          <img class="icon" src="./image/active.png" alt="">
+        </li>
+        <li>南窑头</li>
+        <li>南窑头</li>
+      </ul>
+      <button class="sub">确定</button>
+    </div>
+  </div>
+
+  <ul class="selMayType">
+    <li class="active">
+      <img src="./image/locationActive.png" alt="">
+      实时定位
+    </li>
+    <li>
+      <img src="./image/track.png" alt="">
+      轨迹回放
+    </li>
+    <li>
+      <img src="./image/fence.png" alt="">
+      电子围栏
+    </li>
+  </ul>
+
+</body>
+<script src="./js/fance.js"></script>
+<script>
+  // window.href="./"
+</script>
+<script>
+  new Vue({
+    el: '.fanceDom',
+    data: {
+      aa: '123123123',
+      editButton: false,
+      newFance: false,
+
+    }
+  })
+</script>
+
+</html>
