@@ -1,0 +1,114 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+  <title>新建围栏</title>
+  <link rel="stylesheet" href="./css/reset.css" />
+  <link rel="stylesheet" href="./css/map.css" />
+  <script src="./js/vue.min.js"></script>
+</head>
+
+<body class="fanceDom">
+  <ul class="form">
+    <li>
+      <label>围栏名称</label>
+      <input type="text" />
+      <img src="./image/right.png" alt="">
+    </li>
+    <li>
+      <label>适用设备</label>
+      <input type="text" />
+      <img src="./image/right.png" alt="">
+    </li>
+    <li>
+      <label>报警类型</label>
+      <input type="text" />
+      <img src="./image/right.png" alt="">
+    </li>
+    <li>
+      <label>状态设置</label>
+      <input type="text" />
+      <img src="./image/right.png" alt="">
+    </li>
+  </ul>
+  <div class="submit">
+    <div>下一步,绘制地图围栏</div>
+  </div>
+</body>
+<style>
+  .form {
+    width: 100vw;
+    height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: column;
+  }
+  .form li {
+    width: 90%;
+    height: auto;
+    padding: 20px 0;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .form li label {
+    width: 70px;
+    height: auto;
+    padding: 0 20px;
+    font-size: 14.5px;
+    font-weight: 700;
+    color: #333;
+  }
+  .form li input {
+    width: 200px;
+    height: 30px;
+    border-width: 0;
+    text-align: right;
+    margin-right: 10px;
+  }
+  .form li img {
+    width: 20px;
+    height: 20px;
+  }
+  .submit {
+    position: absolute;
+    bottom: 100px;
+    left: 0;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .submit div {
+    width: 284px;
+    height: 44px;
+    border-radius: 44px;
+    background-color: #3A79F7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    color: #fff;
+  }
+</style>
+<script>
+  // window.href="./"
+</script>
+<script>
+  new Vue({
+    el: '.fanceDom',
+    data: {
+      aa: '123123123',
+      editButton: false,
+      newFance: false,
+
+    }
+  })
+</script>
+
+</html>
