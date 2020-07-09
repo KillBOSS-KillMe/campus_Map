@@ -8,8 +8,8 @@
   <title>新建围栏</title>
   <link rel="stylesheet" href="./css/reset.css" />
   <link rel="stylesheet" href="./css/map.css" />
-  <!-- <script src="./js/vue.min.js"></script> -->
-  <script src="https://unpkg.com/vue/dist/vue.js"></script>
+  <!-- <script src="https://unpkg.com/vue/dist/vue.js"></script> -->
+  <script src="./js/vue.min.js"></script>
 </head>
 
 <body>
@@ -20,17 +20,17 @@
         <input type="text" :value="diviceName" />
         <img src="./image/right.png" alt="">
       </li>
-      <li id="deviceVal" v-on:click="selDevice = true">
+      <li id="deviceVal" @click="selDevice = true">
         <label>适用设备</label>
         <input type="text" disabled />
         <img src="./image/right.png" alt="">
       </li>
-      <li id="alarmVal" v-on:click="alarmType = true">
+      <li id="alarmVal" @click="alarmType = true">
         <label>报警类型</label>
         <input type="text" disabled />
         <img src="./image/right.png" alt="">
       </li>
-      <li id="statusVal" v-on:click="statusSys = true">
+      <li id="statusVal" @click="statusSys = true">
         <label>状态设置</label>
         <input type="text" disabled />
         <img src="./image/right.png" alt="">
@@ -40,24 +40,20 @@
       <div><a v-bind:href="url">下一步,绘制地图围栏</a></div>
     </div>
     <div class="elData" v-if="selDevice">
-        <div class="elDataBg"></div>
+        <div class="elDataBg" @click="closeInstall"></div>
         <div class="elDataCon">
             <h4>选择适用设备</h4>
             <ul>
-                <li>设备1</li>
-                <li class="active">
-                    设备2
-                    <img class="icon" src="./image/active.png" alt="">
-                </li>
-                <li>设备3</li>
-                <li>设备4</li>
-                <li>设备5</li>
+              <li :class="'active':deviceIndex != index" v-for="(item, index) in deviceList" :data-index="index" @click="selDeviceClick">
+                {{item.name}}
+                <img class="icon" src="./image/active.png" v-if="deviceIndex == index" alt="">
+              </li>
             </ul>
-            <button class="sub" v-on:click="selDevice = false">确定</button>
+            <button class="sub" @click="selDevice = false">确定</button>
         </div>
     </div>
     <div class="elData" v-if="alarmType">
-        <div class="elDataBg"></div>
+        <div class="elDataBg" @click="closeInstall"></div>
         <div class="elDataCon">
             <h4>选择报警类型</h4>
             <ul>
@@ -68,11 +64,11 @@
                 </li>
                 <li>类型3</li>
             </ul>
-            <button class="sub" v-on:click="alarmType = false">确定</button>
+            <button class="sub" @click="alarmType = false">确定</button>
         </div>
     </div>
     <div class="elData" v-if="statusSys">
-        <div class="elDataBg"></div>
+        <div class="elDataBg" @click="closeInstall"></div>
         <div class="elDataCon">
             <h4>选择状态设置</h4>
             <ul>
@@ -83,27 +79,54 @@
                 </li>
                 <li>状态3</li>
             </ul>
-            <button class="sub" v-on:click="statusSys = false">确定</button>
+            <button class="sub" @click="statusSys = false">确定</button>
         </div>
     </div>
   </div>
 </body>
-
-<style>
-
-</style>
 <script>
   new Vue({
     el: '#newFance',
     data: {
+      url: '123',
       diviceName: '',
       selDevice: false,
       alarmType: false,
       statusSys: false,
-
+      deviceIndex: null,
+      deviceList: [
+        {name: '设备', id: '1'},
+        {name: '设备', id: '2'},
+        {name: '设备', id: '3'},
+        {name: '设备', id: '4'}
+      ],
+      alarmTypeIndex: null,
+      alarmTypeList: [
+        {name: '类型', id: '1'},
+        {name: '类型', id: '2'},
+        {name: '类型', id: '3'},
+        {name: '类型', id: '4'}
+      ],
+      statusSysIndex: null,
+      statusSysList: [
+        {name: '状态', id: '1'},
+        {name: '状态', id: '2'},
+        {name: '状态', id: '3'},
+        {name: '状态', id: '4'}
+      ]
+    },
+    methods: {
+      closeInstall() {
+        this.selDevice = false
+        this.alarmType = false
+        this.statusSys = false
+      },
+      selDeviceClick(e) {
+        console.log(e)
+        this.deviceIndex = e.target.dataset.index;
+        console.log(this.deviceIndex)
+      }
     }
   })
 </script>
-
-
 </html>
