@@ -487,31 +487,68 @@ body {
     color: #333;
     
 }
-/* <div class="deviceInfo">
-    <div class="item">
-      <div class="img">
-        <img src="./image/newFance.png" alt="">
-      </div>
-      <div class="mainInfo">
-        <h4>名称名称</h4>
-        <div>
-          <img class="power" src="./image/active.png" alt="">
-          80%
-        </div>
-      </div>
-      <div class="operating">
-        <span class="tiem">5小时前</span>
-      </div>
-    </div>
-    <div class="item">
-      <div class="img">
-        <img src="./image/newFance.png" alt="">
-      </div>
-      <div class="mainInfo">
-        <span>陕西省西安市雁塔区软件新城软件公寓</span>
-      </div>
-      <div class="operating">
-        <span>更换位置</span>
-      </div>
-    </div>
-  </div> */
+
+/* 新增围栏--开始 */
+.fanceDom .form {
+    width: 100vw;
+    height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: column;
+  }
+
+  .fanceDom .form li {
+    width: 90%;
+    height: auto;
+    padding: 20px 0;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .fanceDom .form li label {
+    width: 70px;
+    height: auto;
+    padding: 0 20px;
+    font-size: 14.5px;
+    font-weight: 700;
+    color: #333;
+  }
+
+  .fanceDom .form li input {
+    width: 200px;
+    height: 30px;
+    border-width: 0;
+    text-align: right;
+    margin-right: 10px;
+    background-color: #fff;
+  }
+
+  .fanceDom .form li img {
+    width: 20px;
+    height: 20px;
+  }
+
+  .fanceDom .submit {
+    position: absolute;
+    bottom: 100px;
+    left: 0;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .fanceDom .submit div {
+    width: 284px;
+    height: 44px;
+    border-radius: 44px;
+    background-color: #3A79F7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    color: #fff;
+  }
