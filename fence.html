@@ -8,10 +8,7 @@
   <title>电子围栏</title>
   <link rel="stylesheet" href="./css/reset.css" />
   <link rel="stylesheet" href="./css/map.css" />
-  <script src="./js/vue.min.js"></script>
-  <script src="https://unpkg.com/vue/dist/vue.js"></script>
-  <script src="https://webapi.amap.com/maps?v=1.4.15&key=b1e64030afdd4f85f35e3da7ffb33078&plugin=AMap.PolyEditor"></script>
-  <script src="./js/demoutils.js"></script>
+  
 </head>
 
 <body class="fanceDom">
@@ -91,81 +88,77 @@
     </ul>
   </div>
 </body>
+<script src="./js/public.js"></script>
+<script src="./js/vue.min.js"></script>
+<script src="https://unpkg.com/vue/dist/vue.js"></script>
+<script src="https://webapi.amap.com/maps?v=1.4.15&key=b1e64030afdd4f85f35e3da7ffb33078&plugin=AMap.PolyEditor"></script>
+<script src="./js/demoutils.js"></script>
 <script src="./js/fance.js"></script>
 <script>
-    new Vue({
-      el: '#fanceCon',
-      data: {
-        fenceNodeInfo: {},
-        editOpen: false,
-        newFance: false,
-        selFence: false,
-        sysFence: false,
-        fenceIndex: null,
-        fenceList: []
+  new Vue({
+    el: '#fanceCon',
+    data: {
+      userInfo: {},
+      fenceNodeInfo: {},
+      editOpen: false,
+      newFance: false,
+      selFence: false,
+      sysFence: false,
+      fenceIndex: null,
+      fenceList: []
+    },
+    mounted() {
+      // 获取用户信息
+      this.getUserInfo()
+      // 获取围栏列表
+      this.getFenceList()
+    },
+    methods: {
+      goPage(e) {
+        let url = e.target.dataset.url;
+        window.location.href = url
       },
-      mounted() {
-        // 获取用户信息
-        this.getUserInfo()
-        // 获取围栏列表
-        this.getFenceList()
+      getUserInfo() {
+        this.userInfo = getPageData()
       },
-      methods: {
-        goPage(e) {
-          let url = e.target.dataset.url;
-          window.location.href = url
-        },
-        getUserInfo() {
-          // 通过url参数获取
-          console.log(12)
-          var url = location.search; //获取url中"?"符后的字串
-          console.log(url)
-          var theRequest = new Object();
-          if (url.indexOf("?") != -1) {
-              var str = url.substr(1);
-              strs = str.split("&");
-              for(var i = 0; i < strs.length; i ++) {
-                theRequest[strs[i].split("=")[0]]=unescape(strs[i].split("=")[1]);
-              }
-          }
-          return theRequest;
-        },
-        getFenceList() {
-          this.fenceList = [
-            {name: '围栏1', id: '1'},
-            {name: '围栏2', id: '1'},
-            {name: '围栏3', id: '1'},
-            {name: '围栏4', id: '1'},
-            {name: '围栏5', id: '1'},
-          ]
-        },
-        // 关闭所有选择框
-        closeInstall() {
-          this.selDevice = false
-          this.alarmType = false
-          this.statusSys = false
-        },
-        // 获取选择框的值
-        selDataClick(e) {
-          let name = e.target.dataset.name;
-          let index = e.target.dataset.index;
-          this.fenceIndex = index
-        },
-        selectedFence() {
-          if (this.fenceIndex != null) {
-            this.fenceNodeInfo = this.fenceList[this.fenceIndex];
-            this.selFence = false;
-            this.sysFence = true;
-          }
-        },
-        openPolyEditor() {
-          polyEditor.open()
-        },
-        closePolyEditor() {
-          polyEditor.close()
+      getFenceList() {
+        this.fenceList = [
+          {name: '围栏1', id: '1'},
+          {name: '围栏2', id: '1'},
+          {name: '围栏3', id: '1'},
+          {name: '围栏4', id: '1'},
+          {name: '围栏5', id: '1'},
+        ]
+      },
+      // 关闭所有选择框
+      closeInstall() {
+        this.selDevice = false
+        this.alarmType = false
+        this.statusSys = false
+      },
+      // 获取选择框的值
+      selDataClick(e) {
+        let name = e.target.dataset.name;
+        let index = e.target.dataset.index;
+        this.fenceIndex = index
+      },
+      selectedFence() {
+        if (this.fenceIndex != null) {
+          this.fenceNodeInfo = this.fenceList[this.fenceIndex];
+          this.selFence = false;
+          this.sysFence = true;
+        } else {
+          alert('请选择设备')
         }
+      },
+      openPolyEditor() {
+        polyEditor.open()
+      },
+      closePolyEditor() {
+        polyEditor.close()
       }
-    })
-  </script>
+    }
+  })
+</script>
 
 </html>

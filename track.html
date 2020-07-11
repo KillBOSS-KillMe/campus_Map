@@ -13,47 +13,49 @@
 
 <body>
   <div class="mapCon" id="container"></div>
-  <div class="topInfo">
-    <span>选择</span>
-    <img src="./image/right.png" alt="">
-  </div>
-  <div class="elData">
-    <div class="elDataBg"></div>
-    <div class="elDataConPath">
-      <h4>选择设备和时间</h4>
-      <div class="timeSel">
-        <ul class="deviceList">
-          <li>设备1</li>
-          <li class="active">设备1</li>
-          <li>设备1</li>
-        </ul>
-        <ul class="trackTime">
-          <li>6月5日</li>
-          <li class="active">
-            6月5日
-            <img class="icon" src="./image/active.png" alt="">
-          </li>
-          <li>6月5日</li>
-          <li>6月5日</li>
-        </ul>
-      </div>
-      <button class="sub">确定</button>
+  <div id="trackCon">
+    <div class="topInfo" @click="selDevice = true">
+      <span>选择</span>
+      <img src="./image/right.png" alt="">
     </div>
+    <div class="elData" v-if="selDevice">
+      <div class="elDataBg"></div>
+      <div class="elDataConPath">
+        <h4>选择设备和时间</h4>
+        <div class="timeSel">
+          <ul class="deviceList">
+            <li :class="{'active':deviceIndex == index}" v-for="(item, index) in deviceList" data-name="deviceIndex"
+              :data-index="index" @click="selDataClick">
+              {{item.name}}
+            </li>
+          </ul>
+          <ul class="trackTime">
+            <li :class="{'active':tiemIndex == index}" v-for="(item, index) in timeList" data-name="tiemIndex"
+              :data-index="index" @click="selDataClick">
+              {{item}}
+              <img class="icon" src="./image/active.png" v-if="tiemIndex == index" alt="">
+            </li>
+          </ul>
+        </div>
+        <button class="sub" @click="selectedDevice">确定</button>
+      </div>
+    </div>
+    <ul class="selMayType">
+      <li @click="goPage" data-url="index.html">
+        <img src="./image/location.png" alt="">
+        实时定位
+      </li>
+      <li class="active" @click="goPage" data-url="track.html">
+        <img src="./image/track.png" alt="">
+        轨迹回放
+      </li>
+      <li @click="goPage" data-url="fence.html">
+        <img src="./image/fenceActive.png" alt="">
+        电子围栏
+      </li>
+    </ul>
   </div>
-  <ul class="selMayType">
-    <li>
-      <img src="./image/location.png" alt="">
-      实时定位
-    </li>
-    <li>
-      <img src="./image/track.png" alt="">
-      轨迹回放
-    </li>
-    <li class="active">
-      <img src="./image/fenceActive.png" alt="">
-      电子围栏
-    </li>
-  </ul>
+
   <!-- <div class="input-card">
     <h4>轨迹回放控制</h4>
     <div class="input-item">
@@ -65,10 +67,86 @@
         <input type="button" class="btn" value="停止动画" id="stop" onclick="stopAnimation()"/>
     </div>
 </div> -->
-  <!-- <script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.15&key=b1e64030afdd4f85f35e3da7ffb33078"></script> -->
+  
 
 </body>
+<script src="./js/public.js"></script>
+<!-- <script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.15&key=b1e64030afdd4f85f35e3da7ffb33078"></script> -->
 <script language="javascript" src="https://webapi.amap.com/maps?v=1.4.15&key=b1e64030afdd4f85f35e3da7ffb33078&plugin=AMap.GraspRoad"></script>
 <script src="./js/track.js"></script>
-
+<script>
+  new Vue({
+    el: '#trackCon',
+    data: {
+      userInfo: {},
+      deviceNodeInfo: {},
+      selDevice: false,
+      deviceIndex: null,
+      deviceList: [],
+      tiemIndex: null,
+      timeList: []
+    },
+    mounted() {
+      // 获取用户信息
+      this.getUserInfo()
+      // 获取围栏列表
+      this.getDeviceList()
+      // 获取时间列表
+      this.getTimeList()
+    },
+    methods: {
+      goPage(e) {
+        let url = e.target.dataset.url;
+        window.location.href = url
+      },
+      getUserInfo() {
+        this.userInfo = getPageData()
+      },
+      getDeviceList() {
+        this.deviceList = [
+          {name: '设备1', id: '1'},
+          {name: '设备2', id: '1'},
+          {name: '设备3', id: '1'},
+          {name: '设备4', id: '1'},
+          {name: '设备5', id: '1'},
+        ]
+      },
+      getTimeList() {
+        let list = []
+        for (let i = 0; i > -6; i--) {
+          list.push(fun_date(i))
+        }
+        this.timeList = list
+      },
+      // 关闭所有选择框
+      closeInstall() {
+        this.selDevice = false
+        this.alarmType = false
+        this.statusSys = false
+      },
+      // 获取选择框的值
+      selDataClick(e) {
+        let name = e.target.dataset.name;
+        let index = e.target.dataset.index;
+        console.log(name, index)
+        this[name] = index
+      },
+      selectedDevice() {
+        if (this.deviceIndex != null && this.tiemIndex != null) {
+          this.deviceNodeInfo = this.deviceList[this.deviceIndex];
+          this.time = this.timeList[this.tiemIndex];
+          this.selDevice = false;
+        } else {
+          alert('请选择设备及时间')
+        }
+      },
+      openPolyEditor() {
+        polyEditor.open()
+      },
+      closePolyEditor() {
+        polyEditor.close()
+      }
+    }
+  })
+</script>
 </html>
