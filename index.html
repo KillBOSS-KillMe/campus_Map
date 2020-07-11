@@ -8,27 +8,26 @@
   <title>实时定位</title>
   <link rel="stylesheet" href="./css/reset.css" />
   <link rel="stylesheet" href="./css/map.css" />
-  <!-- <script src="./js/vue.min.js"></script> -->
-  
+
 </head>
 
 <body class="fanceDom">
   <div class="mapCon" id="container"></div>
-  <div id="position">
-    <div class="deviceInfo">
+  <div id="positionCon">
+    <div class="deviceInfo" v-if="deviceInfoShow">
       <div class="item">
         <div class="img">
-          <img src="./image/newFance.png" alt="" />
+          <img :src="deviceInfo.img" alt="" />
         </div>
         <div class="mainInfo">
-          <h4>名称名称</h4>
+          <h4>{{deviceInfo.name}}</h4>
           <div>
             <img class="power" src="./image/power.png" alt="" />
-            80%
+            {{deviceInfo.power}}
           </div>
         </div>
         <div class="operating">
-          <span class="tiem">5小时前</span>
+          <span class="tiem">{{deviceInfo.time}}</span>
         </div>
       </div>
       <div class="item">
@@ -38,67 +37,108 @@
               <img src="./image/station.png" alt="" /> -->
         </div>
         <div class="mainInfo">
-          <span class="address">陕西省西安市雁塔区软件新城软件公寓</span>
+          <span class="address">{{deviceInfo.address}}</span>
         </div>
         <div class="operating">
-          <img src="./image/refresh.png" alt="" />
+          <img src="./image/refresh.png" :data-index="deviceIndex" alt="" />
           <span>更换位置</span>
         </div>
       </div>
     </div>
-    <div class="elData" style="display: none;">
-      <div class="elDataBg"></div>
-      <div class="elDataCon">
-        <h4>选择电子围栏</h4>
-        <ul>
-          <li>南窑头</li>
-          <li class="active">
-            南窑头
-            <img class="icon" src="./image/active.png" alt="">
-          </li>
-          <li>南窑头</li>
-          <li>南窑头</li>
-        </ul>
-        <button class="sub">确定</button>
-      </div>
-    </div>
 
     <ul class="selMayType">
-      <li class="active">
-        <img src="./image/locationActive.png" alt="">
-        实时定位
-      </li>
-      <li>
-        <img src="./image/track.png" alt="">
-        轨迹回放
-      </li>
-      <li>
-        <img src="./image/fence.png" alt="">
-        电子围栏
-      </li>
-    </ul>
+        <li class="active" @click="goPage" data-url="index.html">
+          <img src="./image/locationActive.png" alt="">
+          实时定位
+        </li>
+        <li @click="goPage" data-url="track.html">
+          <img src="./image/track.png" alt="">
+          轨迹回放
+        </li>
+        <li @click="goPage" data-url="fence.html">
+          <img src="./image/fence.png" alt="">
+          电子围栏
+        </li>
+      </ul>
   </div>
 
 
 </body>
 <script src="./js/public.js"></script>
 <script src="https://unpkg.com/vue/dist/vue.js"></script>
-<script src="https://webapi.amap.com/maps?v=1.4.15&key=b1e64030afdd4f85f35e3da7ffb33078&plugin=AMap.PolyEditor"></script>
-<script src="https://a.amap.com/jsapi_demos/static/demo-center/js/demoutils.js"></script>
-<script src="./js/fance.js"></script>
+<!-- <script src="https://webapi.amap.com/maps?v=1.4.15&key=b1e64030afdd4f85f35e3da7ffb33078&plugin=AMap.PolyEditor"></script> -->
+<script src="https://webapi.amap.com/maps?v=1.4.15&key=b1e64030afdd4f85f35e3da7ffb33078"></script>
+<script src="./js/position.js"></script>
 <script>
-  // window.href="./"
-</script>
-<script>
-  new Vue({
-    el: '#position',
-    data: {
-      aa: '123123123',
-      editButton: false,
-      newFance: false,
 
+  let pageVueNode = new Vue({
+    el: '#positionCon',
+    data: {
+      deviceInfo: {
+        // name: '设备1', 
+        // id: '1', 
+        // img: './image/avatar.png', 
+        // positions: [116.405467, 39.907761], 
+        // power: '80%', time: '10分钟前', 
+        // address: '地址1地址1地址1地址1地址1地址1地址1', 
+        // signal: '1'
+      },
+      deviceInfoShow: false,
+      userInfo: {},
+      deviceIndex: null,
+      deviceList: []
+    },
+    mounted() {
+      // 获取用户信息
+      this.getUserInfo()
+      // 获取围栏列表
+      this.getDeviceList()
+    },
+    watch:{
+      deviceIndex() {
+        this.deviceInfoShow = true
+        this.deviceInfo = this.deviceList[this.deviceIndex]
+        console.log(this.deviceInfo)
+      }
+    },
+    methods: {
+      goPage(e) {
+        let url = e.target.dataset.url;
+        window.location.href = url
+      },
+      getUserInfo() {
+        this.userInfo = getPageData()
+      },
+      getDeviceList() {
+  //       var positionsList = [
+  //   [116.405467, 39.907761],
+  //   [116.415467, 39.907761],
+  //   [116.415467, 39.917761],
+  //   [116.425467, 39.907761],
+  //   [116.385467, 39.907761]
+  // ];
+        this.deviceList = [
+          {name: '设备1', id: '1', img: './image/avatar.png', positions: [116.405467, 39.907761], power: '80%', time: '10分钟前', address: '地址1地址1地址1地址1地址1地址1地址1', signal: '1'},
+          {name: '设备2', id: '1', img: './image/avatar.png', positions: [116.415467, 39.907761], power: '80%', time: '20分钟前', address: '地址2地址2地址2地址2地址2地址2地址2', signal: '2'},
+          {name: '设备3', id: '1', img: './image/avatar.png', positions: [116.415467, 39.917761], power: '80%', time: '30分钟前', address: '地址3地址3地址3地址3地址3地址3地址3', signal: '3'},
+          {name: '设备4', id: '1', img: './image/avatar.png', positions: [116.425467, 39.907761], power: '80%', time: '50分钟前', address: '地址4地址4地址4地址4地址4地址4地址4', signal: '1'},
+          {name: '设备5', id: '1', img: './image/avatar.png', positions: [116.385467, 39.907761], power: '80%', time: '2小时前', address: '地址5地址5地址5地址5地址5地址5地址5', signal: '2'}
+        ]
+        markersShow(this.deviceList)
+      },
+      deviceInfoShow() {
+        this.deviceInfoShow = true
+        this.deviceInfo = this.deviceList[this.deviceIndex]
+        console.log(this.deviceInfo)
+      }
     }
   })
+  console.log('===========')
+  // console.log(pageVueNode.deviceInfoShow)
+  // pageVueNode.deviceInfoShow = true
+  
+  // console.log(pageVueNode.deviceInfoShow)
+  console.log('===========')
 </script>
 
 </html>

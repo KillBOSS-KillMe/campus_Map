@@ -423,7 +423,7 @@ body {
     height: 22.5px;
 }
 .deviceInfo .item .mainInfo {
-    width: 210px;
+    width: 180px;
     height: 35px;
     display: flex;
     align-items: flex-start;
@@ -551,4 +551,27 @@ body {
     justify-content: center;
     font-size: 18px;
     color: #fff;
+  }
+
+  .markerCon {
+      position: relative;
+      width: 30px;
+      height: 40px;
+  }
+  .markerCon .avatar {
+    position: absolute;
+    top: 2.39px;
+    left: 2.45px;
+    z-index: 10;
+    width: 25px;
+    height: 25px;
+    border-radius: 25px;
+  }
+  .markerCon .avatarBg {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
   }

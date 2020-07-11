@@ -46,11 +46,11 @@
         实时定位
       </li>
       <li class="active" @click="goPage" data-url="track.html">
-        <img src="./image/track.png" alt="">
+        <img src="./image/trackActive.png" alt="">
         轨迹回放
       </li>
       <li @click="goPage" data-url="fence.html">
-        <img src="./image/fenceActive.png" alt="">
+        <img src="./image/fence.png" alt="">
         电子围栏
       </li>
     </ul>
@@ -136,6 +136,7 @@
           this.deviceNodeInfo = this.deviceList[this.deviceIndex];
           this.time = this.timeList[this.tiemIndex];
           this.selDevice = false;
+          startAnimation()
         } else {
           alert('请选择设备及时间')
         }
