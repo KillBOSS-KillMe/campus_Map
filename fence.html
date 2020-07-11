@@ -2,106 +2,170 @@
 <html>
 
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
-    <title>电子围栏</title>
-    <link rel="stylesheet" href="./css/reset.css" />
-    <link rel="stylesheet" href="./css/map.css" />
-    <script src="./js/vue.min.js"></script>
-    <script src="https://unpkg.com/vue/dist/vue.js"></script>
-    <script src="https://webapi.amap.com/maps?v=1.4.15&key=b1e64030afdd4f85f35e3da7ffb33078&plugin=AMap.PolyEditor"></script>
-    <script src="./js/demoutils.js"></script>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+  <title>电子围栏</title>
+  <link rel="stylesheet" href="./css/reset.css" />
+  <link rel="stylesheet" href="./css/map.css" />
+  <script src="./js/vue.min.js"></script>
+  <script src="https://unpkg.com/vue/dist/vue.js"></script>
+  <script src="https://webapi.amap.com/maps?v=1.4.15&key=b1e64030afdd4f85f35e3da7ffb33078&plugin=AMap.PolyEditor"></script>
+  <script src="./js/demoutils.js"></script>
 </head>
 
 <body class="fanceDom">
-    <div class="mapCon" id="container"></div>
-
-    <div class="topInfo">
-        <span>选择</span>
-        <img src="./image/right.png" alt="">
+  <div class="mapCon" id="container"></div>
+  <div id="fanceCon">
+    <div class="topInfo" @click="selFence = true">
+      <span>{{fenceNodeInfo.name || '选择'}}</span>
+      <img src="./image/right.png" alt="">
     </div>
-    <div class="elData" style="display: none;">
-        <div class="elDataBg"></div>
-        <div class="elDataCon">
-            <h4>选择电子围栏</h4>
-            <ul>
-                <li>南窑头</li>
-                <li class="active">
-                    南窑头
-                    <img class="icon" src="./image/active.png" alt="">
-                </li>
-                <li>南窑头</li>
-                <li>南窑头</li>
-            </ul>
-            <button class="sub">确定</button>
-        </div>
+    <div class="elData" v-if="selFence">
+      <div class="elDataBg" @click="closeInstall"></div>
+      <div class="elDataCon">
+        <h4>选择电子围栏</h4>
+        <ul>
+          <li :class="{'active':fenceIndex == index}" v-for="(item, index) in fenceList" data-name="fenceIndex"
+            :data-index="index" @click="selDataClick">
+            {{item.name}}
+            <img class="icon" src="./image/active.png" v-if="fenceIndex == index" alt="">
+          </li>
+        </ul>
+        <button class="sub" @click="selectedFence">确定</button>
+      </div>
     </div>
-    <div class="editButton"  style="display: none;">
-        <button onclick="polyEditor.open()">
-            <img src="./image/startEdit.png" alt="">
-            开始编辑
-        </button>
-        <button onclick="polyEditor.close()">
-            <img src="./image/endEdit.png" alt="">
-            结束编辑
-        </button>
+    <div class="editButton">
+      <!-- <button onclick="polyEditor.open()"> -->
+      <button @click="openPolyEditor">
+        <img src="./image/startEdit.png" alt="">
+        开始编辑
+      </button>
+      <!-- <button onclick="polyEditor.close()"> -->
+      <button @click="closePolyEditor">
+        <img src="./image/endEdit.png" alt="">
+        结束编辑
+      </button>
     </div>
-    <div class="fenceInfo"  style="display: none;">
-        <div class="fenceInfoCon">
-            <button>关闭</button>
-            <h4>
-                南窑头
-                <img src="./image/edit.png" alt="">
-            </h4>
-            <ul>
-                <li>
-                    <div>所有</div>
-                    <span>适用设备</span>
-                </li>
-                <li>
-                    <div>入报警</div>
-                    <span>报警类型</span>
-                </li>
-                <li>
-                    <div>已打开</div>
-                    <span>状态设置</span>
-                </li>
-                <li>
-                    <div>删除</div>
-                    <span>删除围栏</span>
-                </li>
-            </ul>
-        </div>
+    <div class="fenceInfo" v-if="sysFence">
+      <div class="fenceInfoCon">
+        <button @click="sysFence = false">关闭</button>
+        <h4>
+          南窑头
+          <img src="./image/edit.png" alt="">
+        </h4>
+        <ul>
+          <li>
+            <div>所有</div>
+            <span>适用设备</span>
+          </li>
+          <li>
+            <div>入报警</div>
+            <span>报警类型</span>
+          </li>
+          <li>
+            <div>已打开</div>
+            <span>状态设置</span>
+          </li>
+          <li>
+            <div>删除</div>
+            <span>删除围栏</span>
+          </li>
+        </ul>
+      </div>
     </div>
-    <img class="newFance" v-if="newFance" src="./image/newFance.png" alt="">
+    <img class="newFance" src="./image/newFance.png" alt="" @click="goPage" data-url="newFence.html">
     <ul class="selMayType">
-        <li>
-            <img src="./image/location.png" alt="">
-            实时定位
-        </li>
-        <li>
-            <img src="./image/track.png" alt="">
-            轨迹回放
-        </li>
-        <li class="active">
-            <img src="./image/fenceActive.png" alt="">
-            电子围栏
-        </li>
+      <li @click="goPage" data-url="index.html">
+        <img src="./image/location.png" alt="">
+        实时定位
+      </li>
+      <li @click="goPage" data-url="track.html">
+        <img src="./image/track.png" alt="">
+        轨迹回放
+      </li>
+      <li class="active" @click="goPage" data-url="fence.html">
+        <img src="./image/fenceActive.png" alt="">
+        电子围栏
+      </li>
     </ul>
-
+  </div>
 </body>
 <script src="./js/fance.js"></script>
 <script>
     new Vue({
-        el: '.fanceDom',
-        data: {
-            aa: '123123123',
-            editButton: false,
-            newFance: false,
-            
+      el: '#fanceCon',
+      data: {
+        fenceNodeInfo: {},
+        editOpen: false,
+        newFance: false,
+        selFence: false,
+        sysFence: false,
+        fenceIndex: null,
+        fenceList: []
+      },
+      mounted() {
+        // 获取用户信息
+        this.getUserInfo()
+        // 获取围栏列表
+        this.getFenceList()
+      },
+      methods: {
+        goPage(e) {
+          let url = e.target.dataset.url;
+          window.location.href = url
+        },
+        getUserInfo() {
+          // 通过url参数获取
+          console.log(12)
+          var url = location.search; //获取url中"?"符后的字串
+          console.log(url)
+          var theRequest = new Object();
+          if (url.indexOf("?") != -1) {
+              var str = url.substr(1);
+              strs = str.split("&");
+              for(var i = 0; i < strs.length; i ++) {
+                theRequest[strs[i].split("=")[0]]=unescape(strs[i].split("=")[1]);
+              }
+          }
+          return theRequest;
+        },
+        getFenceList() {
+          this.fenceList = [
+            {name: '围栏1', id: '1'},
+            {name: '围栏2', id: '1'},
+            {name: '围栏3', id: '1'},
+            {name: '围栏4', id: '1'},
+            {name: '围栏5', id: '1'},
+          ]
+        },
+        // 关闭所有选择框
+        closeInstall() {
+          this.selDevice = false
+          this.alarmType = false
+          this.statusSys = false
+        },
+        // 获取选择框的值
+        selDataClick(e) {
+          let name = e.target.dataset.name;
+          let index = e.target.dataset.index;
+          this.fenceIndex = index
+        },
+        selectedFence() {
+          if (this.fenceIndex != null) {
+            this.fenceNodeInfo = this.fenceList[this.fenceIndex];
+            this.selFence = false;
+            this.sysFence = true;
+          }
+        },
+        openPolyEditor() {
+          polyEditor.open()
+        },
+        closePolyEditor() {
+          polyEditor.close()
         }
+      }
     })
-</script>
+  </script>
 
 </html>
