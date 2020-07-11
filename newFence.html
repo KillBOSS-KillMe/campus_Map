@@ -9,124 +9,190 @@
   <link rel="stylesheet" href="./css/reset.css" />
   <link rel="stylesheet" href="./css/map.css" />
   <!-- <script src="https://unpkg.com/vue/dist/vue.js"></script> -->
-  <script src="./js/vue.min.js"></script>
+  <!-- <script src="./js/vue.min.js"></script> -->
+  <script src="https://unpkg.com/vue/dist/vue.js"></script>
+  <!-- <script src="./js/jquery-3.5.0.min.js"></script> -->
 </head>
 
 <body>
   <div class="fanceDom" id="newFance">
     <ul class="form">
       <li id="nameVal">
-        <label>围栏名称{{ diviceName }}</label>
-        <input type="text" :value="diviceName" />
+        <label>围栏名称</label>
+        <input type="text" :value="deviceNode.fenceName" v-focus @input="getFenceName" />
         <img src="./image/right.png" alt="">
       </li>
       <li id="deviceVal" @click="selDevice = true">
         <label>适用设备</label>
-        <input type="text" disabled />
+        <input type="text" :value="deviceNode.deviceName" disabled />
         <img src="./image/right.png" alt="">
       </li>
       <li id="alarmVal" @click="alarmType = true">
         <label>报警类型</label>
-        <input type="text" disabled />
+        <input type="text" :value="deviceNode.alarmType" disabled />
         <img src="./image/right.png" alt="">
       </li>
       <li id="statusVal" @click="statusSys = true">
         <label>状态设置</label>
-        <input type="text" disabled />
+        <input type="text" :value="deviceNode.statusSys" disabled />
         <img src="./image/right.png" alt="">
       </li>
     </ul>
     <div class="submit">
-      <div><a v-bind:href="url">下一步,绘制地图围栏</a></div>
+      <div @click="submitFenceInfo">下一步,绘制地图围栏</div>
     </div>
     <div class="elData" v-if="selDevice">
-        <div class="elDataBg" @click="closeInstall"></div>
-        <div class="elDataCon">
-            <h4>选择适用设备</h4>
-            <ul>
-              <li :class="'active':deviceIndex != index" v-for="(item, index) in deviceList" :data-index="index" @click="selDeviceClick">
-                {{item.name}}
-                <img class="icon" src="./image/active.png" v-if="deviceIndex == index" alt="">
-              </li>
-            </ul>
-            <button class="sub" @click="selDevice = false">确定</button>
-        </div>
+      <div class="elDataBg" @click="closeInstall"></div>
+      <div class="elDataCon">
+        <h4>选择适用设备</h4>
+        <ul>
+          <li :class="{'active':deviceIndex == index}" v-for="(item, index) in deviceList" data-name="deviceIndex"
+            :data-index="index" @click="selDataClick">
+            {{item.name}}
+            <img class="icon" src="./image/active.png" v-if="deviceIndex == index" alt="">
+          </li>
+        </ul>
+        <!-- <button class="sub" @click="runSelDevice = false;deviceIndex = deviceIndexShow">确定</button> -->
+      </div>
     </div>
     <div class="elData" v-if="alarmType">
-        <div class="elDataBg" @click="closeInstall"></div>
-        <div class="elDataCon">
-            <h4>选择报警类型</h4>
-            <ul>
-                <li>类型1</li>
-                <li class="active">
-                    类型2
-                    <img class="icon" src="./image/active.png" alt="">
-                </li>
-                <li>类型3</li>
-            </ul>
-            <button class="sub" @click="alarmType = false">确定</button>
-        </div>
+      <div class="elDataBg" @click="closeInstall"></div>
+      <div class="elDataCon">
+        <h4>选择适用设备</h4>
+        <ul>
+          <li :class="{'active':alarmTypeIndex == index}" v-for="(item, index) in alarmTypeList" data-name="alarmTypeIndex"
+            :data-index="index" @click="selDataClick">
+            {{item.name}}
+            <img class="icon" src="./image/active.png" v-if="alarmTypeIndex == index" alt="">
+          </li>
+        </ul>
+        <!-- <button class="sub" @click="runSelDevice = false;deviceIndex = deviceIndexShow">确定</button> -->
+      </div>
     </div>
     <div class="elData" v-if="statusSys">
-        <div class="elDataBg" @click="closeInstall"></div>
-        <div class="elDataCon">
-            <h4>选择状态设置</h4>
-            <ul>
-                <li>状态1</li>
-                <li class="active">
-                    状态2
-                    <img class="icon" src="./image/active.png" alt="">
-                </li>
-                <li>状态3</li>
-            </ul>
-            <button class="sub" @click="statusSys = false">确定</button>
-        </div>
+      <div class="elDataBg" @click="closeInstall"></div>
+      <div class="elDataCon">
+        <h4>选择适用设备</h4>
+        <ul>
+          <li :class="{'active':statusSysIndex == index}" v-for="(item, index) in statusSysList" data-name="statusSysIndex"
+            :data-index="index" @click="selDataClick">
+            {{item.name}}
+            <img class="icon" src="./image/active.png" v-if="statusSysIndex == index" alt="">
+          </li>
+        </ul>
+        <!-- <button class="sub" @click="runSelDevice = false;deviceIndex = deviceIndexShow">确定</button> -->
+      </div>
     </div>
   </div>
 </body>
 <script>
+
+</script>
+
+<script>
   new Vue({
     el: '#newFance',
+    directives: {
+    // 注册一个局部的自定义指令 v-focus
+    focus: {
+      // 指令的定义
+      inserted: function (el) {
+        // 聚焦元素
+        el.focus()
+      }
+    }
+  },
     data: {
-      url: '123',
-      diviceName: '',
+      url: '',
       selDevice: false,
       alarmType: false,
       statusSys: false,
+      deviceNode: {
+        fenceName: '',
+        deviceName: '',
+        alarmType: '',
+        statusSys: ''
+      },
       deviceIndex: null,
-      deviceList: [
-        {name: '设备', id: '1'},
-        {name: '设备', id: '2'},
-        {name: '设备', id: '3'},
-        {name: '设备', id: '4'}
-      ],
+      deviceList: [],
       alarmTypeIndex: null,
-      alarmTypeList: [
-        {name: '类型', id: '1'},
-        {name: '类型', id: '2'},
-        {name: '类型', id: '3'},
-        {name: '类型', id: '4'}
-      ],
+      alarmTypeList: [],
       statusSysIndex: null,
-      statusSysList: [
-        {name: '状态', id: '1'},
-        {name: '状态', id: '2'},
-        {name: '状态', id: '3'},
-        {name: '状态', id: '4'}
-      ]
+      statusSysList: []
+    },
+    mounted() {
+      // 获取用户信息
+      this.getUserInfo()
+      // 获取设备列表
+      this.getDeviceList()
+      // 获取报警类型列表
+      this.getAlarmTypeList()
+      // 获取状态列表
+      this.getStatusSysList()
     },
     methods: {
+      getUserInfo() {
+        // 通过url参数获取
+      },
+      getDeviceList() {
+        this.deviceList = [
+          { name: '设备', id: '1' },
+          { name: '设备', id: '2' },
+          { name: '设备', id: '3' },
+          { name: '设备', id: '4' }
+        ]
+      },
+      getAlarmTypeList() {
+        this.alarmTypeList = [
+          { name: '类型', id: '1' },
+          { name: '类型', id: '2' },
+          { name: '类型', id: '3' },
+          { name: '类型', id: '4' }
+        ]
+      },
+      getStatusSysList() {
+        this.statusSysList = [
+          { name: '状态', id: '1' },
+          { name: '状态', id: '2' },
+          { name: '状态', id: '3' },
+          { name: '状态', id: '4' }
+        ]
+      },
+      // 关闭所有选择框
       closeInstall() {
         this.selDevice = false
         this.alarmType = false
         this.statusSys = false
       },
-      selDeviceClick(e) {
-        console.log(e)
-        this.deviceIndex = e.target.dataset.index;
-        console.log(this.deviceIndex)
+      // 获取设备名称
+      getFenceName(e) {
+        this.deviceNode.fenceName = e.target.value;
+      },
+      // 获取选择框的值
+      selDataClick(e) {
+        let name = e.target.dataset.name;
+        let index = e.target.dataset.index;
+        this[name] = index
+        if (name == 'deviceIndex') {
+          this.deviceNode.deviceName = this.deviceList[index].name;
+        } else if (name == 'alarmTypeIndex') {
+          this.deviceNode.alarmType = this.alarmTypeList[index].name;
+        } else if (name == 'statusSysIndex') {
+          this.deviceNode.statusSys = this.statusSysList[index].name;
+        }
+        setTimeout(() => {
+          this.closeInstall()
+        }, 500)
+      },
+      // 提交值
+      submitFenceInfo() {
+        console.log(`fenceName---${this.deviceNode.fenceName}`)
+        console.log(`deviceIndex---${this.deviceIndex}`)
+        console.log(`alarmTypeIndex---${this.alarmTypeIndex}`)
+        console.log(`statusSysIndex---${this.statusSysIndex}`)
       }
     }
   })
 </script>
+
 </html>
