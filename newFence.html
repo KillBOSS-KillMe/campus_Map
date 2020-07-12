@@ -48,7 +48,7 @@
         <ul>
           <li :class="{'active':deviceIndex == index}" v-for="(item, index) in deviceList" data-name="deviceIndex"
             :data-index="index" @click="selDataClick">
-            {{item.name}}
+            {{item.member.memName}}
             <img class="icon" src="./image/active.png" v-if="deviceIndex == index" alt="">
           </li>
         </ul>
@@ -87,11 +87,14 @@
 </body>
 <script src="./js/public.js"></script>
 <script src="https://unpkg.com/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script>
 
 </script>
 
 <script>
+  let userInfo = getPageData()
+  userInfo['token'] = 'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyQ29kZSI6Im51bGxfemp4aiIsImxvZ2luQ29kZSI6IjEzMzU5MjAxODQzIiwibW9iaWxlIjoiIiwidXNlck5hbWUiOiIxMzM1OTIwMTg0MyIsInVzZXJUeXBlIjoibWVtYmVyIiwiaWF0IjoxNTk0NTI0Mjg5fQ.Tec2zF7P0Ng52j6F9VGLuzGGozkM2ikAWvqq2n8-FWc'
   new Vue({
     el: '#newFance',
     directives: {
@@ -129,6 +132,7 @@
       ]
     },
     mounted() {
+      axiosInit()
       // 获取用户信息
       this.getUserInfo()
       // 获取设备列表
@@ -143,12 +147,24 @@
         this.userInfo = getPageData()
       },
       getDeviceList() {
-        this.deviceList = [
-          { name: '设备', id: '1' },
-          { name: '设备', id: '2' },
-          { name: '设备', id: '3' },
-          { name: '设备', id: '4' }
-        ]
+        // this.deviceList = [
+        //   { name: '设备', id: '1' },
+        //   { name: '设备', id: '2' },
+        //   { name: '设备', id: '3' },
+        //   { name: '设备', id: '4' }
+        // ]
+        axios.get(`/terminal/list`)
+          .then(res => {
+            if (res.status == 200) {
+              this.deviceList = res.data.payload
+              console.log(this.deviceList)
+              // this.deviceList = this.dataConvert(this.deviceList)
+              markersShow(this.deviceList)
+            }
+          })
+          .catch(function (error) { // 请求失败处理
+            console.log(error);
+          });
       },
       // 关闭所有选择框
       closeInstall() {
@@ -166,7 +182,7 @@
         let index = e.target.dataset.index;
         this[name] = index
         if (name == 'deviceIndex') {
-          this.deviceNode.deviceName = this.deviceList[index].name;
+          this.deviceNode.deviceName = this.deviceList[index].member.memName;
         } else if (name == 'alarmTypeIndex') {
           this.deviceNode.alarmType = this.alarmTypeList[index].name;
         } else if (name == 'statusSysIndex') {
@@ -177,7 +193,7 @@
         }, 500)
       },
       // 提交值
-      submitFenceInfo() {
+      submitFenceInfo(e) {
         // console.log(`fenceName---${this.deviceNode.fenceName}`)
         // console.log(`deviceIndex---${this.deviceIndex}`)
         // console.log(`alarmTypeIndex---${this.alarmTypeIndex}`)
@@ -193,8 +209,8 @@
         }
         let fenceName = this.deviceNode.fenceName;
         let deviceInfo = this.deviceList[this.deviceIndex]
-        let alarmType = this.alarmTypeList[tihs.alarmTypeIndex].id;
-        let statusSys = this.statusSysList[tihs.statusSysIndex].id;
+        let alarmType = this.alarmTypeList[this.alarmTypeIndex].id;
+        let statusSys = this.statusSysList[this.statusSysIndex].id;
         let token = this.userInfo.token;
         let url = e.target.dataset.url;
         window.location.href = `${url}?token=${token}&fenceName=${fenceName}&deviceInfo=${deviceInfo}&alarmType=${alarmType}&statusSys=${statusSys}`

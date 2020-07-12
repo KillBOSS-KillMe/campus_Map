@@ -32,9 +32,10 @@
       </div>
       <div class="item">
         <div class="img">
-          <img src="./image/wifi.png" alt="" />
-          <!-- <img src="./image/GPS.png" alt="" />
-              <img src="./image/station.png" alt="" /> -->
+          <!-- // geolocationState 1 gps  3无线网  4基站 -->
+          <img src="./image/wifi.png" alt="" v-if="deviceInfo.geolocationState == 3" />
+          <img src="./image/GPS.png" alt="" v-if="deviceInfo.geolocationState == 1" />
+          <img src="./image/station.png" alt="" v-if="deviceInfo.geolocationState == 4" />
         </div>
         <div class="mainInfo">
           <span class="address">{{deviceInfo.address}}</span>
@@ -92,39 +93,40 @@
     },
     watch: {
       deviceIndex() {
-        axios.get(`/terminal/list`)
+        let index = this.deviceIndex
+        let deviceList = this.deviceList
+        let terminalSn = deviceList[index].terminalSn
+        let memName = '11'
+        // if (deviceList[index].member.hasOwnProperty('memName')) {
+        //   memName = deviceList[index].member.memName
+        // }
+        axios.get(`/geo/location/latest/${terminalSn}`)
           .then(res => {
             if (res.status == 200) {
-              let list = res.data.payload
-              for (let i = 0; i < list.length; i++) {
-                let itemNode = {}
-                console.log(itemNode)
-                this.deviceList.push(itemNode)
-              }
-              console.log(this.deviceList)
-              // this.deviceList = this.dataConvert(this.deviceList)
-              markersShow(this.deviceList)
+              this.deviceInfo = res.data.payload
+              this.deviceInfo.memName = memName
+              this.deviceInfo['pastTima'] = showTime(this.deviceInfo.timestamp)
+              let geocoder = new AMap.Geocoder({
+                radius: 1000,
+                extensions: "all"
+              });
+
+              let position = [this.deviceInfo.lngValue, this.deviceInfo.latValue]
+              geocoder.getAddress(position, (status, result) => {
+                if (status === 'complete' && result.info === 'OK') {
+                  this.deviceInfo['address'] = result.regeocode.formattedAddress
+                  
+                  this.deviceInfoShow = true
+                  console.log('=========================')
+                  console.log(this.deviceInfo)
+                }
+              })
+              // geolocationState 1 gps  3无线网  4基站
             }
           })
           .catch(function (error) { // 请求失败处理
             console.log(error);
           });
-
-        // this.deviceInfo = this.deviceList[this.deviceIndex]
-        // var geocoder = new AMap.Geocoder({
-        //   radius: 1000,
-        //   extensions: "all"
-        // });
-        // this.deviceInfo['pastTima'] = showTime(this.deviceInfo.timestamp)
-        // let position = [this.deviceInfo.state.lastCoordLng, this.deviceInfo.lastCoordLat]
-        // geocoder.getAddress(position, (status, result) => {
-        //   if (status === 'complete' && result.info === 'OK') {
-        //     this.deviceInfo['address'] = result.regeocode.formattedAddress
-        //   }
-        // })
-        this.deviceInfoShow = true
-        console.log('=========================')
-        console.log(this.deviceInfo)
       }
     },
     methods: {

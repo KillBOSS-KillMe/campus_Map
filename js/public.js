@@ -12,9 +12,9 @@ function axiosInit() {
 function getPageData() {
   // 通过url参数获取
   // file:///D:/workspace/campus_Map/fence.html?openid=10
-  // let url = location.search; //获取url中"?"符后的字串
-  let url = '?openid=10'
-  console.log(url)
+  let url = location.search; //获取url中"?"符后的字串
+  // let url = '?openid=10'
+  // console.log(url)
   let theRequest = new Object();
   if (url.indexOf("?") != -1) {
     let str = url.substr(1);
