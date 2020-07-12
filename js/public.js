@@ -1,3 +1,6 @@
+const requestUrl = "https://www.hwaaogj.com:6443/ste/geo/"
+// https://www.hwaaogj.com:6443/ste/geo/location/latest/{terminalSn}
+
 function getPageData() {
   // 通过url参数获取
   // file:///D:/workspace/campus_Map/fence.html?openid=10

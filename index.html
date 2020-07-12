@@ -47,25 +47,26 @@
     </div>
 
     <ul class="selMayType">
-        <li class="active" @click="goPage" data-url="index.html">
-          <img src="./image/locationActive.png" alt="">
-          实时定位
-        </li>
-        <li @click="goPage" data-url="track.html">
-          <img src="./image/track.png" alt="">
-          轨迹回放
-        </li>
-        <li @click="goPage" data-url="fence.html">
-          <img src="./image/fence.png" alt="">
-          电子围栏
-        </li>
-      </ul>
+      <li class="active" @click="goPage" data-url="index.html">
+        <img src="./image/locationActive.png" alt="">
+        实时定位
+      </li>
+      <li @click="goPage" data-url="track.html">
+        <img src="./image/track.png" alt="">
+        轨迹回放
+      </li>
+      <li @click="goPage" data-url="fence.html">
+        <img src="./image/fence.png" alt="">
+        电子围栏
+      </li>
+    </ul>
   </div>
 
 
 </body>
 <script src="./js/public.js"></script>
 <script src="https://unpkg.com/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <!-- <script src="https://webapi.amap.com/maps?v=1.4.15&key=b1e64030afdd4f85f35e3da7ffb33078&plugin=AMap.PolyEditor"></script> -->
 <script src="https://webapi.amap.com/maps?v=1.4.15&key=b1e64030afdd4f85f35e3da7ffb33078"></script>
 <script src="./js/position.js"></script>
@@ -84,7 +85,9 @@
         // signal: '1'
       },
       deviceInfoShow: false,
-      userInfo: {},
+      userInfo: {
+        terminalSn: '20120712'
+      },
       deviceIndex: null,
       deviceList: []
     },
@@ -94,7 +97,7 @@
       // 获取围栏列表
       this.getDeviceList()
     },
-    watch:{
+    watch: {
       deviceIndex() {
         this.deviceInfoShow = true
         this.deviceInfo = this.deviceList[this.deviceIndex]
@@ -107,24 +110,34 @@
         window.location.href = url
       },
       getUserInfo() {
-        this.userInfo = getPageData()
+        // this.userInfo = getPageData()
       },
       getDeviceList() {
-  //       var positionsList = [
-  //   [116.405467, 39.907761],
-  //   [116.415467, 39.907761],
-  //   [116.415467, 39.917761],
-  //   [116.425467, 39.907761],
-  //   [116.385467, 39.907761]
-  // ];
+        //       var positionsList = [
+        //   [116.405467, 39.907761],
+        //   [116.415467, 39.907761],
+        //   [116.415467, 39.917761],
+        //   [116.425467, 39.907761],
+        //   [116.385467, 39.907761]
+        // ];
         this.deviceList = [
-          {name: '设备1', id: '1', img: './image/avatar.png', positions: [116.405467, 39.907761], power: '80%', time: '10分钟前', address: '地址1地址1地址1地址1地址1地址1地址1', signal: '1'},
-          {name: '设备2', id: '1', img: './image/avatar.png', positions: [116.415467, 39.907761], power: '80%', time: '20分钟前', address: '地址2地址2地址2地址2地址2地址2地址2', signal: '2'},
-          {name: '设备3', id: '1', img: './image/avatar.png', positions: [116.415467, 39.917761], power: '80%', time: '30分钟前', address: '地址3地址3地址3地址3地址3地址3地址3', signal: '3'},
-          {name: '设备4', id: '1', img: './image/avatar.png', positions: [116.425467, 39.907761], power: '80%', time: '50分钟前', address: '地址4地址4地址4地址4地址4地址4地址4', signal: '1'},
-          {name: '设备5', id: '1', img: './image/avatar.png', positions: [116.385467, 39.907761], power: '80%', time: '2小时前', address: '地址5地址5地址5地址5地址5地址5地址5', signal: '2'}
+          { name: '设备1', id: '1', img: './image/avatar.png', positions: [116.405467, 39.907761], power: '80%', time: '10分钟前', address: '地址1地址1地址1地址1地址1地址1地址1', signal: '1' },
+          { name: '设备2', id: '1', img: './image/avatar.png', positions: [116.415467, 39.907761], power: '80%', time: '20分钟前', address: '地址2地址2地址2地址2地址2地址2地址2', signal: '2' },
+          { name: '设备3', id: '1', img: './image/avatar.png', positions: [116.415467, 39.917761], power: '80%', time: '30分钟前', address: '地址3地址3地址3地址3地址3地址3地址3', signal: '3' },
+          { name: '设备4', id: '1', img: './image/avatar.png', positions: [116.425467, 39.907761], power: '80%', time: '50分钟前', address: '地址4地址4地址4地址4地址4地址4地址4', signal: '1' },
+          { name: '设备5', id: '1', img: './image/avatar.png', positions: [116.385467, 39.907761], power: '80%', time: '2小时前', address: '地址5地址5地址5地址5地址5地址5地址5', signal: '2' }
         ]
         markersShow(this.deviceList)
+        console.log('--------')
+        console.log(this.userInfo.terminalSn)
+        console.log(`${requestUrl}location/latest/${this.userInfo.terminalSn}`)
+        axios.get(`${requestUrl}location/latest/${this.userInfo.terminalSn}`)
+          .then(res => {
+            console.log(res)
+          })
+          .catch(function (error) { // 请求失败处理
+            console.log(error);
+          });
       },
       deviceInfoShow() {
         this.deviceInfoShow = true
@@ -136,7 +149,7 @@
   console.log('===========')
   // console.log(pageVueNode.deviceInfoShow)
   // pageVueNode.deviceInfoShow = true
-  
+
   // console.log(pageVueNode.deviceInfoShow)
   console.log('===========')
 </script>
