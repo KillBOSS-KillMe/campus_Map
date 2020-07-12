@@ -91,14 +91,17 @@
 <script src="./js/public.js"></script>
 <script src="./js/vue.min.js"></script>
 <script src="https://unpkg.com/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="https://webapi.amap.com/maps?v=1.4.15&key=b1e64030afdd4f85f35e3da7ffb33078&plugin=AMap.PolyEditor"></script>
 <script src="./js/demoutils.js"></script>
 <script src="./js/fance.js"></script>
 <script>
+  let userInfo = getPageData()
+  userInfo['tolen'] = 'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyQ29kZSI6Im51bGxfemp4aiIsImxvZ2luQ29kZSI6IjEzMzU5MjAxODQzIiwibW9iaWxlIjoiIiwidXNlck5hbWUiOiIxMzM1OTIwMTg0MyIsInVzZXJUeXBlIjoibWVtYmVyIiwiaWF0IjoxNTk0NTI0Mjg5fQ.Tec2zF7P0Ng52j6F9VGLuzGGozkM2ikAWvqq2n8-FWc'
   new Vue({
     el: '#fanceCon',
     data: {
-      userInfo: {},
+      userInfo: userInfo,
       fenceNodeInfo: {},
       editOpen: false,
       newFance: false,
@@ -109,7 +112,8 @@
     },
     mounted() {
       // 获取用户信息
-      this.getUserInfo()
+      // this.getUserInfo()
+      axiosInit()
       // 获取围栏列表
       this.getFenceList()
     },
@@ -118,9 +122,9 @@
         let url = e.target.dataset.url;
         window.location.href = url
       },
-      getUserInfo() {
-        this.userInfo = getPageData()
-      },
+      // getUserInfo() {
+      //   this.userInfo = getPageData()
+      // },
       getFenceList() {
         this.fenceList = [
           {name: '围栏1', id: '1'},
@@ -129,6 +133,25 @@
           {name: '围栏4', id: '1'},
           {name: '围栏5', id: '1'},
         ]
+        
+        axios.get(`/geo/fence/list`)
+          .then(res => {
+            if (res.status == 200) {
+              let list = res.data.payload
+              for (let i = 0; i < list.length;i++) {
+                let itemNode = {}
+                console.log(itemNode)
+                this.fenceList.push(itemNode)
+              }
+              // console.log(this.fenceList)
+              this.fenceList = list
+              // this.deviceList = this.dataConvert(this.deviceList)
+              markersShow(this.fenceList)
+            }
+          })
+          .catch(function (error) { // 请求失败处理
+            console.log(error);
+          });
       },
       // 关闭所有选择框
       closeInstall() {

@@ -17,17 +17,17 @@
     <div class="deviceInfo" v-if="deviceInfoShow">
       <div class="item">
         <div class="img">
-          <img :src="deviceInfo.img" alt="" />
+          <img :src="deviceInfo.avatar" alt="" />
         </div>
         <div class="mainInfo">
-          <h4>{{deviceInfo.name}}</h4>
+          <h4>{{deviceInfo.memName}}</h4>
           <div>
             <img class="power" src="./image/power.png" alt="" />
-            {{deviceInfo.power}}
+            {{deviceInfo.voltageRange}}
           </div>
         </div>
         <div class="operating">
-          <span class="tiem">{{deviceInfo.time}}</span>
+          <span class="tiem">{{deviceInfo.pastTima}}</span>
         </div>
       </div>
       <div class="item">
@@ -69,38 +69,44 @@
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <!-- <script src="https://webapi.amap.com/maps?v=1.4.15&key=b1e64030afdd4f85f35e3da7ffb33078&plugin=AMap.PolyEditor"></script> -->
 <script src="https://webapi.amap.com/maps?v=1.4.15&key=b1e64030afdd4f85f35e3da7ffb33078"></script>
+<script src="https://webapi.amap.com/maps?v=1.4.15&key=b1e64030afdd4f85f35e3da7ffb33078&plugin=AMap.Geocoder"></script>
 <script src="./js/position.js"></script>
 <script>
-
+  let userInfo = getPageData()
+  userInfo['tolen'] = 'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyQ29kZSI6Im51bGxfemp4aiIsImxvZ2luQ29kZSI6IjEzMzU5MjAxODQzIiwibW9iaWxlIjoiIiwidXNlck5hbWUiOiIxMzM1OTIwMTg0MyIsInVzZXJUeXBlIjoibWVtYmVyIiwiaWF0IjoxNTk0NTI0Mjg5fQ.Tec2zF7P0Ng52j6F9VGLuzGGozkM2ikAWvqq2n8-FWc'
   let pageVueNode = new Vue({
     el: '#positionCon',
     data: {
-      deviceInfo: {
-        // name: '设备1', 
-        // id: '1', 
-        // img: './image/avatar.png', 
-        // positions: [116.405467, 39.907761], 
-        // power: '80%', time: '10分钟前', 
-        // address: '地址1地址1地址1地址1地址1地址1地址1', 
-        // signal: '1'
-      },
+      deviceInfo: {},
       deviceInfoShow: false,
-      userInfo: {
-        terminalSn: '20120712'
-      },
+      userInfo: userInfo,
       deviceIndex: null,
       deviceList: []
     },
     mounted() {
       // 获取用户信息
-      this.getUserInfo()
+      // this.getUserInfo()
+      axiosInit()
       // 获取围栏列表
       this.getDeviceList()
     },
     watch: {
       deviceIndex() {
-        this.deviceInfoShow = true
+        
         this.deviceInfo = this.deviceList[this.deviceIndex]
+        var geocoder = new AMap.Geocoder({
+          radius: 1000,
+          extensions: "all"
+        });
+        this.deviceInfo['pastTima'] = showTime(this.deviceInfo.timestamp)
+        let position = [this.deviceInfo.state.lastCoordLng, this.deviceInfo.lastCoordLat]
+        // geocoder.getAddress(position, (status, result) => {
+        //   if (status === 'complete' && result.info === 'OK') {
+        //     this.deviceInfo['address'] = result.regeocode.formattedAddress
+        //   }
+        // })
+        this.deviceInfoShow = true
+        console.log('=========================')
         console.log(this.deviceInfo)
       }
     },
@@ -113,45 +119,45 @@
         // this.userInfo = getPageData()
       },
       getDeviceList() {
-        //       var positionsList = [
-        //   [116.405467, 39.907761],
-        //   [116.415467, 39.907761],
-        //   [116.415467, 39.917761],
-        //   [116.425467, 39.907761],
-        //   [116.385467, 39.907761]
-        // ];
-        this.deviceList = [
-          { name: '设备1', id: '1', img: './image/avatar.png', positions: [116.405467, 39.907761], power: '80%', time: '10分钟前', address: '地址1地址1地址1地址1地址1地址1地址1', signal: '1' },
-          { name: '设备2', id: '1', img: './image/avatar.png', positions: [116.415467, 39.907761], power: '80%', time: '20分钟前', address: '地址2地址2地址2地址2地址2地址2地址2', signal: '2' },
-          { name: '设备3', id: '1', img: './image/avatar.png', positions: [116.415467, 39.917761], power: '80%', time: '30分钟前', address: '地址3地址3地址3地址3地址3地址3地址3', signal: '3' },
-          { name: '设备4', id: '1', img: './image/avatar.png', positions: [116.425467, 39.907761], power: '80%', time: '50分钟前', address: '地址4地址4地址4地址4地址4地址4地址4', signal: '1' },
-          { name: '设备5', id: '1', img: './image/avatar.png', positions: [116.385467, 39.907761], power: '80%', time: '2小时前', address: '地址5地址5地址5地址5地址5地址5地址5', signal: '2' }
-        ]
-        markersShow(this.deviceList)
-        console.log('--------')
-        console.log(this.userInfo.terminalSn)
-        console.log(`${requestUrl}location/latest/${this.userInfo.terminalSn}`)
-        axios.get(`${requestUrl}location/latest/${this.userInfo.terminalSn}`)
+        axios.get(`/terminal/list`)
           .then(res => {
-            console.log(res)
+            if (res.status == 200) {
+              let list = res.data.payload
+              for (let i = 0; i < list.length;i++) {
+                let itemNode = {}
+                itemNode['avatar'] = list[i].member.avatar
+                itemNode['memName'] = list[i].member.memName
+                itemNode['memCode'] = list[i].member.memCode
+                itemNode['msisdn'] = list[i].member.msisdn
+                itemNode['btMac'] = list[i].btMac
+                itemNode['imei'] = list[i].imei
+                itemNode['netMac'] = list[i].netMac
+                itemNode['status'] = list[i].status
+                itemNode['terminalSn'] = list[i].terminalSn
+                itemNode['terminalType'] = list[i].terminalType 
+                itemNode['lastCoordLat'] = list[i].state.lastCoordLat
+                itemNode['lastCoordLng'] = list[i].state.lastCoordLng
+                itemNode['maintRef'] = list[i].state.maintRef
+                itemNode['online'] = list[i].state.online
+                itemNode['state'] = list[i].state.state
+                itemNode['stateRef'] = list[i].state.stateRef
+                itemNode['timestamp'] = list[i].state.timestamp
+                itemNode['voltage'] = list[i].state.voltage
+                itemNode['voltageRange'] = list[i].state.voltageRange
+                console.log(itemNode)
+                this.deviceList.push(itemNode)
+              }
+              console.log(this.deviceList)
+              // this.deviceList = this.dataConvert(this.deviceList)
+              markersShow(this.deviceList)
+            }
           })
           .catch(function (error) { // 请求失败处理
             console.log(error);
           });
-      },
-      deviceInfoShow() {
-        this.deviceInfoShow = true
-        this.deviceInfo = this.deviceList[this.deviceIndex]
-        console.log(this.deviceInfo)
       }
     }
   })
-  console.log('===========')
-  // console.log(pageVueNode.deviceInfoShow)
-  // pageVueNode.deviceInfoShow = true
-
-  // console.log(pageVueNode.deviceInfoShow)
-  console.log('===========')
 </script>
 
 </html>

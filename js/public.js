@@ -1,6 +1,14 @@
-const requestUrl = "https://www.hwaaogj.com:6443/ste/geo/"
+// const requestUrl = "https://www.hwaaogj.com:6443/ste/"
+// axios.defaults.baseURL = "https://www.hwaaogj.com:6443/ste/";
+// axios.defaults.headers.common['Authorization'] = userInfo.token;
+// axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 // https://www.hwaaogj.com:6443/ste/geo/location/latest/{terminalSn}
+function axiosInit() {
 
+  axios.defaults.baseURL = "https://www.hwaaogj.com:6443/ste/";
+  axios.defaults.headers.common['Authorization'] = userInfo.token;
+  axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+}
 function getPageData() {
   // 通过url参数获取
   // file:///D:/workspace/campus_Map/fence.html?openid=10
@@ -28,4 +36,55 @@ function fun_date(num) {
   var time2 = date2.getFullYear() + "-" + (date2.getMonth() + 1) + "-" + date2.getDate();
   console.log(time2);
   return time2;
+}
+
+function showTime(timeStr) {
+  if (timeStr == null || timeStr == '') {
+    return;
+  }
+  timeStr = formatDateTime(timeStr)
+  var end_str = (timeStr).replace(/-/g, "/");
+  var class_time = new Date(end_str);   //将时间字符串转换为时间.
+  var now_time = new Date();
+  var totalSecs = (class_time - now_time) / 1000;   //获得两个时间的总毫秒数. 靠前的就调换再减。
+  var days = Math.floor(totalSecs / 3600 / 24);
+  var hours = Math.floor((totalSecs - days * 24 * 3600) / 3600);
+  var mins = Math.floor((totalSecs - days * 24 * 3600 - hours * 3600) / 60);
+  var secs = Math.floor((totalSecs - days * 24 * 3600 - hours * 3600 - mins * 60));
+  let time = ''
+  // if (days != 0) {
+  //   time = Math.abs(days) + "天" + hours + "小时" + mins + "分钟" + secs + "秒前";
+  // } else if (hours == 0 && mins == 0) {
+  //   time = secs + "秒前";
+  // } else if (hours == 0 && mins != 0) {
+  //   time = mins + "分钟" + secs + "秒前";
+  // } else if (hours != 0) {
+  //   time = hours + "小时" + mins + "分钟" + secs + "秒前";
+  // }
+  if (days != 0) {
+    time = Math.abs(days) + "天前";
+  } else if (hours == 0 && mins == 0) {
+    time = Math.abs(secs) + "秒前"; 
+  } else if (hours == 0 && mins != 0) {
+    time = Math.abs(mins) + "分钟前";
+  } else if (hours != 0) {
+    time = Math.abs(hours) + "小时前";
+  }
+  return time
+}
+
+function formatDateTime(date) {
+  let time = new Date(Date.parse(date));
+  time.setTime(time.setHours(time.getHours() + 8));
+  let Y = time.getFullYear();
+  let M = this.addZero(time.getMonth() + 1);
+  let D = this.addZero(time.getDate());
+  let h = this.addZero(time.getHours());
+  let m = this.addZero(time.getMinutes());
+  let s = this.addZero(time.getSeconds());
+  return `${Y}-${M}-${D} ${h}:${m}:${s}`;
+}
+// 数字补0操作
+function addZero(num) {
+  return num < 10 ? '0' + num : num;
 }
