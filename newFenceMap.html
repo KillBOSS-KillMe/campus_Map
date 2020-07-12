@@ -15,22 +15,8 @@
   <div class="mapCon" id="container"></div>
   <div id="fanceCon">
     <div class="topInfo" @click="selFence = true">
-      <span>{{fenceNodeInfo.name || '选择'}}</span>
+      <span>{{userInfo.fenceName}}</span>
       <img src="./image/right.png" alt="">
-    </div>
-    <div class="elData" v-if="selFence">
-      <div class="elDataBg" @click="closeInstall"></div>
-      <div class="elDataCon">
-        <h4>选择电子围栏</h4>
-        <ul>
-          <li :class="{'active':fenceIndex == index}" v-for="(item, index) in fenceList" data-name="fenceIndex"
-            :data-index="index" @click="selDataClick">
-            {{item.name}}
-            <img class="icon" src="./image/active.png" v-if="fenceIndex == index" alt="">
-          </li>
-        </ul>
-        <button class="sub" @click="selectedFence">确定</button>
-      </div>
     </div>
     <div class="editButton">
       <!-- <button onclick="polyEditor.open()"> -->
@@ -44,48 +30,6 @@
         结束编辑
       </button>
     </div>
-    <div class="fenceInfo" v-if="sysFence">
-      <div class="fenceInfoCon">
-        <button @click="sysFence = false">关闭</button>
-        <h4>
-          南窑头
-          <img src="./image/edit.png" alt="">
-        </h4>
-        <ul>
-          <li>
-            <div>所有</div>
-            <span>适用设备</span>
-          </li>
-          <li>
-            <div>入报警</div>
-            <span>报警类型</span>
-          </li>
-          <li>
-            <div>已打开</div>
-            <span>状态设置</span>
-          </li>
-          <li>
-            <div>删除</div>
-            <span>删除围栏</span>
-          </li>
-        </ul>
-      </div>
-    </div>
-    <img class="newFance" src="./image/newFance.png" alt="" @click="goPage" data-url="newFence.html">
-    <ul class="selMayType">
-      <li @click="goPage" data-url="index.html">
-        <img src="./image/location.png" alt="">
-        实时定位
-      </li>
-      <li @click="goPage" data-url="track.html">
-        <img src="./image/track.png" alt="">
-        轨迹回放
-      </li>
-      <li class="active" @click="goPage" data-url="fence.html">
-        <img src="./image/fenceActive.png" alt="">
-        电子围栏
-      </li>
-    </ul>
   </div>
 </body>
 <script src="./js/public.js"></script>
@@ -98,18 +42,13 @@
 <script>
   let userInfo = getPageData()
   console.log(userInfo)
+  // `${url}?token=${token}&fenceName=${fenceName}&deviceInfo=${deviceInfo}&alarmType=${alarmType}&statusSys=${statusSys}`
   userInfo['token'] = 'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyQ29kZSI6Im51bGxfemp4aiIsImxvZ2luQ29kZSI6IjEzMzU5MjAxODQzIiwibW9iaWxlIjoiIiwidXNlck5hbWUiOiIxMzM1OTIwMTg0MyIsInVzZXJUeXBlIjoibWVtYmVyIiwiaWF0IjoxNTk0NTI0Mjg5fQ.Tec2zF7P0Ng52j6F9VGLuzGGozkM2ikAWvqq2n8-FWc'
   new Vue({
     el: '#fanceCon',
     data: {
       userInfo: userInfo,
       fenceNodeInfo: {},
-      editOpen: false,
-      newFance: false,
-      selFence: false,
-      sysFence: false,
-      fenceIndex: null,
-      fenceList: []
     },
     mounted() {
       // 获取用户信息
@@ -123,9 +62,6 @@
         let url = e.target.dataset.url;
         window.location.href = url
       },
-      // getUserInfo() {
-      //   this.userInfo = getPageData()
-      // },
       getFenceList() {
         this.fenceList = [
           {name: '围栏1', id: '1'},
@@ -151,27 +87,6 @@
           .catch(function (error) { // 请求失败处理
             console.log(error);
           });
-      },
-      // 关闭所有选择框
-      closeInstall() {
-        this.selDevice = false
-        this.alarmType = false
-        this.statusSys = false
-      },
-      // 获取选择框的值
-      selDataClick(e) {
-        let name = e.target.dataset.name;
-        let index = e.target.dataset.index;
-        this.fenceIndex = index
-      },
-      selectedFence() {
-        if (this.fenceIndex != null) {
-          this.fenceNodeInfo = this.fenceList[this.fenceIndex];
-          this.selFence = false;
-          this.sysFence = true;
-        } else {
-          alert('请选择设备')
-        }
       },
       openPolyEditor() {
         polyEditor.open()

@@ -24,7 +24,7 @@
       </li>
       <li id="deviceVal" @click="selDevice = true">
         <label>适用设备</label>
-        <input type="text" :value="deviceNode.deviceName" disabled />
+        <input type="text" :value="deviceNode.deviceNameAll" disabled />
         <img src="./image/right.png" alt="">
       </li>
       <li id="alarmVal" @click="alarmType = true">
@@ -46,13 +46,12 @@
       <div class="elDataCon">
         <h4>选择适用设备</h4>
         <ul>
-          <li :class="{'active':deviceIndex == index}" v-for="(item, index) in deviceList" data-name="deviceIndex"
-            :data-index="index" @click="selDataClick">
+          <li :class="{'active':item.sel == 1}" v-for="(item, index) in deviceList" :data-index="index" @click="selDeviceClick">
             {{item.member.memName}}
-            <img class="icon" src="./image/active.png" v-if="deviceIndex == index" alt="">
+            <img class="icon" src="./image/active.png" v-if="item.sel == 1" alt="">
           </li>
         </ul>
-        <!-- <button class="sub" @click="runSelDevice = false;deviceIndex = deviceIndexShow">确定</button> -->
+        <button class="sub" @click="selDevice = false;">确定</button>
       </div>
     </div>
     <div class="elData" v-if="alarmType">
@@ -113,12 +112,11 @@
       alarmType: false,
       statusSys: false,
       deviceNode: {
-        fenceName: '',
+        deviceNameAll: '',
         deviceName: '',
         alarmType: '',
         statusSys: ''
       },
-      deviceIndex: null,
       deviceList: [],
       alarmTypeIndex: null,
       alarmTypeList: [
@@ -146,18 +144,31 @@
       getUserInfo() {
         this.userInfo = getPageData()
       },
+      selDeviceClick(e) {
+        let index = e.target.dataset.index;
+        if (this.deviceList[index].sel == 1) {
+          this.deviceList[index].sel = 0
+        } else {
+          this.deviceList[index].sel = 1
+        }
+        let deviceNameAll = []
+        for (let i = 0; i < this.deviceList.length; i++) {
+          if (this.deviceList[i].sel == 1) {
+            deviceNameAll.push(this.deviceList[i].member.memName)
+          }
+        }
+        this.deviceNode.deviceNameAll = deviceNameAll.toString()
+      },
       getDeviceList() {
-        // this.deviceList = [
-        //   { name: '设备', id: '1' },
-        //   { name: '设备', id: '2' },
-        //   { name: '设备', id: '3' },
-        //   { name: '设备', id: '4' }
-        // ]
         axios.get(`/terminal/list`)
           .then(res => {
             if (res.status == 200) {
-              this.deviceList = res.data.payload
+              let list = res.data.payload
               console.log(this.deviceList)
+              for (let i = 0; i < list.length; i++) {
+                list[i]['sel'] = 0
+              }
+              this.deviceList = list
               // this.deviceList = this.dataConvert(this.deviceList)
               markersShow(this.deviceList)
             }
@@ -181,9 +192,7 @@
         let name = e.target.dataset.name;
         let index = e.target.dataset.index;
         this[name] = index
-        if (name == 'deviceIndex') {
-          this.deviceNode.deviceName = this.deviceList[index].member.memName;
-        } else if (name == 'alarmTypeIndex') {
+        if (name == 'alarmTypeIndex') {
           this.deviceNode.alarmType = this.alarmTypeList[index].name;
         } else if (name == 'statusSysIndex') {
           this.deviceNode.statusSys = this.statusSysList[index].name;
@@ -198,22 +207,30 @@
         // console.log(`deviceIndex---${this.deviceIndex}`)
         // console.log(`alarmTypeIndex---${this.alarmTypeIndex}`)
         // console.log(`statusSysIndex---${this.statusSysIndex}`)
+        let deviceList = this.deviceList
+        let sn = []
+        for (let i = 0; i < deviceList.length; i++) {
+          if (deviceList[i].sel = 1) {
+            sn.push(deviceList[i].terminalSn)
+          }
+        }
+        sn.toString()
+        console.log(sn)
         if (
-          this.deviceNode.fenceName == '' || 
-          this.deviceIndex == null || 
+          this.deviceNode.deviceNameAll == '' || 
           this.alarmTypeIndex == null || 
           this.statusSysIndex == null
         ) {
           alert('请完善信息');
           return false;
         }
-        let fenceName = this.deviceNode.fenceName;
-        let deviceInfo = this.deviceList[this.deviceIndex]
+        let deviceNameAll = this.deviceNode.deviceNameAll
         let alarmType = this.alarmTypeList[this.alarmTypeIndex].id;
         let statusSys = this.statusSysList[this.statusSysIndex].id;
         let token = this.userInfo.token;
         let url = e.target.dataset.url;
-        window.location.href = `${url}?token=${token}&fenceName=${fenceName}&deviceInfo=${deviceInfo}&alarmType=${alarmType}&statusSys=${statusSys}`
+        
+        window.location.href = `${url}?token=${token}&fenceName=${deviceNameAll}&matchTerminalSn=${sn}&alarmType=${alarmType}&effect=${statusSys}`
       }
     }
   })
