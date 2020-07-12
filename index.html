@@ -92,7 +92,7 @@
     },
     watch: {
       deviceIndex() {
-        
+
         this.deviceInfo = this.deviceList[this.deviceIndex]
         var geocoder = new AMap.Geocoder({
           radius: 1000,
@@ -123,7 +123,7 @@
           .then(res => {
             if (res.status == 200) {
               let list = res.data.payload
-              for (let i = 0; i < list.length;i++) {
+              for (let i = 0; i < list.length; i++) {
                 let itemNode = {}
                 itemNode['avatar'] = list[i].member.avatar
                 itemNode['memName'] = list[i].member.memName
@@ -134,7 +134,7 @@
                 itemNode['netMac'] = list[i].netMac
                 itemNode['status'] = list[i].status
                 itemNode['terminalSn'] = list[i].terminalSn
-                itemNode['terminalType'] = list[i].terminalType 
+                itemNode['terminalType'] = list[i].terminalType
                 itemNode['lastCoordLat'] = list[i].state.lastCoordLat
                 itemNode['lastCoordLng'] = list[i].state.lastCoordLng
                 itemNode['maintRef'] = list[i].state.maintRef

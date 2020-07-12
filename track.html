@@ -6,7 +6,6 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
   <title>轨迹回放</title>
-  <script src="https://unpkg.com/vue/dist/vue.js"></script>
   <link rel="stylesheet" href="./css/reset.css" />
   <link rel="stylesheet" href="./css/map.css" />
 </head>
@@ -71,14 +70,18 @@
 
 </body>
 <script src="./js/public.js"></script>
+<script src="https://unpkg.com/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <!-- <script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.15&key=b1e64030afdd4f85f35e3da7ffb33078"></script> -->
 <script language="javascript" src="https://webapi.amap.com/maps?v=1.4.15&key=b1e64030afdd4f85f35e3da7ffb33078&plugin=AMap.GraspRoad"></script>
 <script src="./js/track.js"></script>
 <script>
+  let userInfo = getPageData()
+  userInfo['tolen'] = 'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyQ29kZSI6Im51bGxfemp4aiIsImxvZ2luQ29kZSI6IjEzMzU5MjAxODQzIiwibW9iaWxlIjoiIiwidXNlck5hbWUiOiIxMzM1OTIwMTg0MyIsInVzZXJUeXBlIjoibWVtYmVyIiwiaWF0IjoxNTk0NTI0Mjg5fQ.Tec2zF7P0Ng52j6F9VGLuzGGozkM2ikAWvqq2n8-FWc'
   new Vue({
     el: '#trackCon',
     data: {
-      userInfo: {},
+      userInfo: userInfo,
       deviceNodeInfo: {},
       selDevice: false,
       deviceIndex: null,
@@ -87,9 +90,8 @@
       timeList: []
     },
     mounted() {
-      // 获取用户信息
-      this.getUserInfo()
-      // 获取围栏列表
+      axiosInit()
+      // 获取设备列表
       this.getDeviceList()
       // 获取时间列表
       this.getTimeList()
@@ -110,6 +112,42 @@
           {name: '设备4', id: '1'},
           {name: '设备5', id: '1'},
         ]
+        axios.get(`/terminal/list`)
+          .then(res => {
+            if (res.status == 200) {
+              let list = res.data.payload
+              for (let i = 0; i < list.length;i++) {
+                let itemNode = {}
+                itemNode['avatar'] = list[i].member.avatar
+                itemNode['memName'] = list[i].member.memName
+                itemNode['memCode'] = list[i].member.memCode
+                itemNode['msisdn'] = list[i].member.msisdn
+                itemNode['btMac'] = list[i].btMac
+                itemNode['imei'] = list[i].imei
+                itemNode['netMac'] = list[i].netMac
+                itemNode['status'] = list[i].status
+                itemNode['terminalSn'] = list[i].terminalSn
+                itemNode['terminalType'] = list[i].terminalType 
+                itemNode['lastCoordLat'] = list[i].state.lastCoordLat
+                itemNode['lastCoordLng'] = list[i].state.lastCoordLng
+                itemNode['maintRef'] = list[i].state.maintRef
+                itemNode['online'] = list[i].state.online
+                itemNode['state'] = list[i].state.state
+                itemNode['stateRef'] = list[i].state.stateRef
+                itemNode['timestamp'] = list[i].state.timestamp
+                itemNode['voltage'] = list[i].state.voltage
+                itemNode['voltageRange'] = list[i].state.voltageRange
+                console.log(itemNode)
+                this.deviceList.push(itemNode)
+              }
+              console.log(this.deviceList)
+              // this.deviceList = this.dataConvert(this.deviceList)
+              markersShow(this.deviceList)
+            }
+          })
+          .catch(function (error) { // 请求失败处理
+            console.log(error);
+          });
       },
       getTimeList() {
         let list = []
