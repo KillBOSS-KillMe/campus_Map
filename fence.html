@@ -94,7 +94,7 @@
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="https://webapi.amap.com/maps?v=1.4.15&key=b1e64030afdd4f85f35e3da7ffb33078&plugin=AMap.PolyEditor"></script>
 <script src="./js/demoutils.js"></script>
-<script src="./js/fance.js"></script>
+<!-- <script src="./js/fance.js"></script> -->
 <script>
   let userInfo = getPageData()
   userInfo['tolen'] = 'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyQ29kZSI6Im51bGxfemp4aiIsImxvZ2luQ29kZSI6IjEzMzU5MjAxODQzIiwibW9iaWxlIjoiIiwidXNlck5hbWUiOiIxMzM1OTIwMTg0MyIsInVzZXJUeXBlIjoibWVtYmVyIiwiaWF0IjoxNTk0NTI0Mjg5fQ.Tec2zF7P0Ng52j6F9VGLuzGGozkM2ikAWvqq2n8-FWc'
@@ -144,7 +144,7 @@
                 this.fenceList.push(itemNode)
               }
               this.fenceList = list
-              markersShow(this.fenceList)
+              // markersShow(this.fenceList)
             }
           })
           .catch(function (error) { // 请求失败处理
@@ -168,6 +168,8 @@
           this.fenceNodeInfo = this.fenceList[this.fenceIndex];
           this.selFence = false;
           this.sysFence = true;
+          // 围栏显示
+          fenceShow()
         } else {
           alert('请选择设备')
         }
@@ -180,6 +182,62 @@
       }
     }
   })
+function fenceData() {
+
+}
+var map = new AMap.Map("container", {
+    center: [116.400274, 39.905812],
+    zoom: 14
+});
+
+var fenceData = [
+    [116.403322, 39.920255],
+    [116.410703, 39.897555],
+    [116.402292, 39.892353],
+    [116.389846, 39.891365]
+]
+
+var polygon = new AMap.Polygon({
+    path: fenceData,
+    strokeColor: "#FF33FF", 
+    strokeWeight: 6,
+    strokeOpacity: 0.2,
+    fillOpacity: 0.4,
+    fillColor: '#1791fc',
+    zIndex: 50,
+})
+
+map.add(polygon)
+// 缩放地图到合适的视野级别
+map.setFitView([ polygon ])
+
+var polyEditor = new AMap.PolyEditor(map, polygon)
+
+polyEditor.on('addnode', function(event) {
+  console.log('触发事件：addnode')
+    log.info('触发事件：addnode')
+})
+
+polyEditor.on('adjust', function(event) {
+  console.log('触发事件：adjust')
+    log.info('触发事件：adjust')
+    
+})
+
+polyEditor.on('removenode', function(event) {
+  console.log('触发事件：removenode')
+    log.info('触发事件：removenode')
+})
+
+polyEditor.on('end', function(event) {
+  console.log('触发事件： end')
+    log.info('触发事件： end')
+  // 保存围栏地址
+  console.log(polygon)
+  let newFenceData = polygon.w.path;
+  console.log(newFenceData)
+    // event.target 即为编辑后的多边形对象
+})
 </script>
 
 </html>
