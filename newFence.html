@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="./css/map.css" />
   <!-- <script src="https://unpkg.com/vue/dist/vue.js"></script> -->
   <!-- <script src="./js/vue.min.js"></script> -->
-  
+
   <!-- <script src="./js/jquery-3.5.0.min.js"></script> -->
 </head>
 
@@ -60,8 +60,8 @@
       <div class="elDataCon">
         <h4>选择适用设备</h4>
         <ul>
-          <li :class="{'active':alarmTypeIndex == index}" v-for="(item, index) in alarmTypeList" data-name="alarmTypeIndex"
-            :data-index="index" @click="selDataClick">
+          <li :class="{'active':alarmTypeIndex == index}" v-for="(item, index) in alarmTypeList"
+            data-name="alarmTypeIndex" :data-index="index" @click="selDataClick">
             {{item.name}}
             <img class="icon" src="./image/active.png" v-if="alarmTypeIndex == index" alt="">
           </li>
@@ -74,8 +74,8 @@
       <div class="elDataCon">
         <h4>选择适用设备</h4>
         <ul>
-          <li :class="{'active':statusSysIndex == index}" v-for="(item, index) in statusSysList" data-name="statusSysIndex"
-            :data-index="index" @click="selDataClick">
+          <li :class="{'active':statusSysIndex == index}" v-for="(item, index) in statusSysList"
+            data-name="statusSysIndex" :data-index="index" @click="selDataClick">
             {{item.name}}
             <img class="icon" src="./image/active.png" v-if="statusSysIndex == index" alt="">
           </li>
@@ -118,19 +118,21 @@
       deviceIndex: null,
       deviceList: [],
       alarmTypeIndex: null,
-      alarmTypeList: [],
+      alarmTypeList: [
+        { name: '出报警', id: '0' },
+        { name: '入报警', id: '1' }
+      ],
       statusSysIndex: null,
-      statusSysList: []
+      statusSysList: [
+        { name: '不生效', id: '0' },
+        { name: '生效', id: '1' }
+      ]
     },
     mounted() {
       // 获取用户信息
       this.getUserInfo()
       // 获取设备列表
       this.getDeviceList()
-      // 获取报警类型列表
-      this.getAlarmTypeList()
-      // 获取状态列表
-      this.getStatusSysList()
     },
     methods: {
       goPage(e) {
@@ -146,22 +148,6 @@
           { name: '设备', id: '2' },
           { name: '设备', id: '3' },
           { name: '设备', id: '4' }
-        ]
-      },
-      getAlarmTypeList() {
-        this.alarmTypeList = [
-          { name: '类型', id: '1' },
-          { name: '类型', id: '2' },
-          { name: '类型', id: '3' },
-          { name: '类型', id: '4' }
-        ]
-      },
-      getStatusSysList() {
-        this.statusSysList = [
-          { name: '状态', id: '1' },
-          { name: '状态', id: '2' },
-          { name: '状态', id: '3' },
-          { name: '状态', id: '4' }
         ]
       },
       // 关闭所有选择框
@@ -201,7 +187,7 @@
       }
     }
   })
-  
+
 </script>
 
 </html>
