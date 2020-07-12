@@ -195,8 +195,9 @@
         let deviceInfo = this.deviceList[this.deviceIndex]
         let alarmType = this.alarmTypeList[tihs.alarmTypeIndex].id;
         let statusSys = this.statusSysList[tihs.statusSysIndex].id;
+        let token = this.userInfo.token;
         let url = e.target.dataset.url;
-        window.location.href = `${url}?fenceName=${fenceName}&deviceInfo=${deviceInfo}&alarmType=${alarmType}&statusSys=${statusSys}`
+        window.location.href = `${url}?token=${token}&fenceName=${fenceName}&deviceInfo=${deviceInfo}&alarmType=${alarmType}&statusSys=${statusSys}`
       }
     }
   })
