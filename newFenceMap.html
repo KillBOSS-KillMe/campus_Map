@@ -37,8 +37,10 @@
 <script src="https://unpkg.com/vue/dist/vue.js"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="https://webapi.amap.com/maps?v=1.4.15&key=b1e64030afdd4f85f35e3da7ffb33078&plugin=AMap.PolyEditor"></script>
+<script src="https://webapi.amap.com/maps?v=1.4.15&key=b1e64030afdd4f85f35e3da7ffb33078&plugin=AMap.Autocomplete&plugin=AMap.Geocoder"></script>
+<script type="text/javascript" src="https://cache.amap.com/lbs/static/addToolbar.js"></script>
 <script src="./js/demoutils.js"></script>
-<script src="./js/fance.js"></script>
+<!-- <script src="./js/fance.js"></script> -->
 <script>
   let userInfo = getPageData()
   console.log(userInfo)
@@ -96,6 +98,91 @@
       }
     }
   })
+  var map = new AMap.Map("container", {
+      center: [116.400274, 39.905812],
+      zoom: 14
+  });
+
+  var path = [
+      [116.403322, 39.920255],
+      [116.410703, 39.897555],
+      [116.402292, 39.892353],
+      [116.389846, 39.891365]
+  ]
+
+  var polygon = new AMap.Polygon({
+      path: path,
+      strokeColor: "#FF33FF", 
+      strokeWeight: 6,
+      strokeOpacity: 0.2,
+      fillOpacity: 0.4,
+      fillColor: '#1791fc',
+      zIndex: 50,
+  })
+
+  map.add(polygon)
+  // 缩放地图到合适的视野级别
+  map.setFitView([ polygon ])
+
+  // var polyEditor = new AMap.PolyEditor(map, polygon)
+
+  // polyEditor.on('addnode', function(event) {
+  //     log.info('触发事件：addnode')
+  // })
+
+  // polyEditor.on('adjust', function(event) {
+  //     log.info('触发事件：adjust')
+  // })
+
+  // polyEditor.on('removenode', function(event) {
+  //     log.info('触发事件：removenode')
+  // })
+
+  // polyEditor.on('end', function(event) {
+  //     log.info('触发事件： end')
+  //     // event.target 即为编辑后的多边形对象
+  // })
+
+  //为地图注册click事件获取鼠标点击出的经纬度坐标
+  var clickEventListener = map.on('click', function(e) {
+        // document.getElementById("lnglat").value = e.lnglat.getLng() + ',' + e.lnglat.getLat();
+
+        // if (marker) {
+        //     marker.setMap(null);
+        //     marker = null;
+        // }
+        addMarker(e.lnglat.getLng(),e.lnglat.getLat());
+        //这边是数组
+        // var lnglatXY=[e.lnglat.getLng(),e.lnglat.getLat()];
+        // regeocoder(lnglatXY);
+    });
+
+    var auto = new AMap.Autocomplete({
+        input: "tipinput"
+    });
+
+    //注册监听，当选中某条记录时会触发
+    AMap.event.addListener(auto, "select", select);
+    function select(e) {
+        var lng = e.poi.location.lng;
+        var lat = e.poi.location.lat;
+        console.log(e.poi.location.lng);
+        if (e.poi && e.poi.location) {
+            map.setZoom(15);
+            map.setCenter(e.poi.location);
+            addMarker(lng,lat);
+        }
+    }
+
+    var marker;
+    // 实例化点标记
+    function addMarker(lng,lat) {
+        marker = new AMap.Marker({
+            icon: "https://webapi.amap.com/theme/v1.3/markers/n/mark_b.png",
+            position: [lng, lat]
+        });
+        marker.setMap(map);
+    }
 </script>
 
 </html>
