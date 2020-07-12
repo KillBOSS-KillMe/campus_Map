@@ -92,14 +92,31 @@
     },
     watch: {
       deviceIndex() {
+        axios.get(`/terminal/list`)
+          .then(res => {
+            if (res.status == 200) {
+              let list = res.data.payload
+              for (let i = 0; i < list.length; i++) {
+                let itemNode = {}
+                console.log(itemNode)
+                this.deviceList.push(itemNode)
+              }
+              console.log(this.deviceList)
+              // this.deviceList = this.dataConvert(this.deviceList)
+              markersShow(this.deviceList)
+            }
+          })
+          .catch(function (error) { // 请求失败处理
+            console.log(error);
+          });
 
-        this.deviceInfo = this.deviceList[this.deviceIndex]
-        var geocoder = new AMap.Geocoder({
-          radius: 1000,
-          extensions: "all"
-        });
-        this.deviceInfo['pastTima'] = showTime(this.deviceInfo.timestamp)
-        let position = [this.deviceInfo.state.lastCoordLng, this.deviceInfo.lastCoordLat]
+        // this.deviceInfo = this.deviceList[this.deviceIndex]
+        // var geocoder = new AMap.Geocoder({
+        //   radius: 1000,
+        //   extensions: "all"
+        // });
+        // this.deviceInfo['pastTima'] = showTime(this.deviceInfo.timestamp)
+        // let position = [this.deviceInfo.state.lastCoordLng, this.deviceInfo.lastCoordLat]
         // geocoder.getAddress(position, (status, result) => {
         //   if (status === 'complete' && result.info === 'OK') {
         //     this.deviceInfo['address'] = result.regeocode.formattedAddress

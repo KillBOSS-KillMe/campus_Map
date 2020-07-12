@@ -39,7 +39,7 @@
       </li>
     </ul>
     <div class="submit">
-      <div @click="submitFenceInfo">下一步,绘制地图围栏</div>
+      <div @click="submitFenceInfo" data-url="newFenceMap.html">下一步,绘制地图围栏</div>
     </div>
     <div class="elData" v-if="selDevice">
       <div class="elDataBg" @click="closeInstall"></div>
@@ -178,12 +178,25 @@
       },
       // 提交值
       submitFenceInfo() {
-        console.log(`fenceName---${this.deviceNode.fenceName}`)
-        console.log(`deviceIndex---${this.deviceIndex}`)
-        console.log(`alarmTypeIndex---${this.alarmTypeIndex}`)
-        console.log(`statusSysIndex---${this.statusSysIndex}`)
+        // console.log(`fenceName---${this.deviceNode.fenceName}`)
+        // console.log(`deviceIndex---${this.deviceIndex}`)
+        // console.log(`alarmTypeIndex---${this.alarmTypeIndex}`)
+        // console.log(`statusSysIndex---${this.statusSysIndex}`)
+        if (
+          this.deviceNode.fenceName == '' || 
+          this.deviceIndex == null || 
+          this.alarmTypeIndex == null || 
+          this.statusSysIndex == null
+        ) {
+          alert('请完善信息');
+          return false;
+        }
+        let fenceName = this.deviceNode.fenceName;
+        let deviceInfo = this.deviceList[this.deviceIndex]
+        let alarmType = this.alarmTypeList[tihs.alarmTypeIndex].id;
+        let statusSys = this.statusSysList[tihs.statusSysIndex].id;
         let url = e.target.dataset.url;
-        window.location.href = url
+        window.location.href = `${url}?fenceName=${fenceName}&deviceInfo=${deviceInfo}&alarmType=${alarmType}&statusSys=${statusSys}`
       }
     }
   })
