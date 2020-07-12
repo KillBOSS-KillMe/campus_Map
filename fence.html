@@ -8,7 +8,7 @@
   <title>电子围栏</title>
   <link rel="stylesheet" href="./css/reset.css" />
   <link rel="stylesheet" href="./css/map.css" />
-  
+
 </head>
 
 <body class="fanceDom">
@@ -127,24 +127,18 @@
       // },
       getFenceList() {
         this.fenceList = [
-          {name: '围栏1', id: '1'},
-          {name: '围栏2', id: '1'},
-          {name: '围栏3', id: '1'},
-          {name: '围栏4', id: '1'},
-          {name: '围栏5', id: '1'},
+          { name: '围栏1', id: '1' },
+          { name: '围栏2', id: '1' },
+          { name: '围栏3', id: '1' },
+          { name: '围栏4', id: '1' },
+          { name: '围栏5', id: '1' },
         ]
-        
+
         axios.get(`/geo/fence/list`)
           .then(res => {
             if (res.status == 200) {
-              let list = res.data.payload
-              for (let i = 0; i < list.length;i++) {
-                let itemNode = {}
-                console.log(itemNode)
-                this.fenceList.push(itemNode)
-              }
-              this.fenceList = list
-              // markersShow(this.fenceList)
+              this.fenceList = res.data.payload
+              fenceData()
             }
           })
           .catch(function (error) { // 请求失败处理
@@ -182,62 +176,62 @@
       }
     }
   })
-function fenceData() {
+  function fenceData() {
+    var map = new AMap.Map("container", {
+      center: [116.400274, 39.905812],
+      zoom: 14
+    });
 
-}
-var map = new AMap.Map("container", {
-    center: [116.400274, 39.905812],
-    zoom: 14
-});
+    var fenceData = [
+      [116.403322, 39.920255],
+      [116.410703, 39.897555],
+      [116.402292, 39.892353],
+      [116.389846, 39.891365]
+    ]
 
-var fenceData = [
-    [116.403322, 39.920255],
-    [116.410703, 39.897555],
-    [116.402292, 39.892353],
-    [116.389846, 39.891365]
-]
+    var polygon = new AMap.Polygon({
+      path: fenceData,
+      strokeColor: "#FF33FF",
+      strokeWeight: 6,
+      strokeOpacity: 0.2,
+      fillOpacity: 0.4,
+      fillColor: '#1791fc',
+      zIndex: 50,
+    })
 
-var polygon = new AMap.Polygon({
-    path: fenceData,
-    strokeColor: "#FF33FF", 
-    strokeWeight: 6,
-    strokeOpacity: 0.2,
-    fillOpacity: 0.4,
-    fillColor: '#1791fc',
-    zIndex: 50,
-})
+    map.add(polygon)
+    // 缩放地图到合适的视野级别
+    map.setFitView([polygon])
 
-map.add(polygon)
-// 缩放地图到合适的视野级别
-map.setFitView([ polygon ])
+    var polyEditor = new AMap.PolyEditor(map, polygon)
 
-var polyEditor = new AMap.PolyEditor(map, polygon)
+    polyEditor.on('addnode', function (event) {
+      console.log('触发事件：addnode')
+      log.info('触发事件：addnode')
+    })
 
-polyEditor.on('addnode', function(event) {
-  console.log('触发事件：addnode')
-    log.info('触发事件：addnode')
-})
+    polyEditor.on('adjust', function (event) {
+      console.log('触发事件：adjust')
+      log.info('触发事件：adjust')
 
-polyEditor.on('adjust', function(event) {
-  console.log('触发事件：adjust')
-    log.info('触发事件：adjust')
-    
-})
+    })
 
-polyEditor.on('removenode', function(event) {
-  console.log('触发事件：removenode')
-    log.info('触发事件：removenode')
-})
+    polyEditor.on('removenode', function (event) {
+      console.log('触发事件：removenode')
+      log.info('触发事件：removenode')
+    })
 
-polyEditor.on('end', function(event) {
-  console.log('触发事件： end')
-    log.info('触发事件： end')
-  // 保存围栏地址
-  console.log(polygon)
-  let newFenceData = polygon.w.path;
-  console.log(newFenceData)
-    // event.target 即为编辑后的多边形对象
-})
+    polyEditor.on('end', function (event) {
+      console.log('触发事件： end')
+      log.info('触发事件： end')
+      // 保存围栏地址
+      console.log(polygon)
+      let newFenceData = polygon.w.path;
+      console.log(newFenceData)
+      // event.target 即为编辑后的多边形对象
+    })
+  }
+
 </script>
 
 </html>
