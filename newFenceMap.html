@@ -8,7 +8,7 @@
   <title>电子围栏</title>
   <link rel="stylesheet" href="./css/reset.css" />
   <link rel="stylesheet" href="./css/map.css" />
-  
+
 </head>
 
 <body class="fanceDom">
@@ -56,39 +56,11 @@
       // 获取用户信息
       // this.getUserInfo()
       axiosInit()
-      // 获取围栏列表
-      this.getFenceList()
     },
     methods: {
       goPage(e) {
         let url = e.target.dataset.url;
         window.location.href = url
-      },
-      getFenceList() {
-        this.fenceList = [
-          {name: '围栏1', id: '1'},
-          {name: '围栏2', id: '1'},
-          {name: '围栏3', id: '1'},
-          {name: '围栏4', id: '1'},
-          {name: '围栏5', id: '1'},
-        ]
-        
-        axios.get(`/geo/fence/list`)
-          .then(res => {
-            if (res.status == 200) {
-              let list = res.data.payload
-              for (let i = 0; i < list.length;i++) {
-                let itemNode = {}
-                console.log(itemNode)
-                this.fenceList.push(itemNode)
-              }
-              this.fenceList = list
-              markersShow(this.fenceList)
-            }
-          })
-          .catch(function (error) { // 请求失败处理
-            console.log(error);
-          });
       },
       openPolyEditor() {
         polyEditor.open()
@@ -98,91 +70,122 @@
       }
     }
   })
-  var map = new AMap.Map("container", {
-      center: [116.400274, 39.905812],
-      zoom: 14
+
+
+
+  var map, geolocation;
+  //加载地图，调用浏览器定位服务
+  map = new AMap.Map('container', {
+    resizeEnable: true
   });
+  map.plugin('AMap.Geolocation', function () {
+    geolocation = new AMap.Geolocation({
+      enableHighAccuracy: true, //是否使用高精度定位，默认:true
+      timeout: 10000, //超过10秒后停止定位，默认：无穷大
+      buttonOffset: new AMap.Pixel(10, 20), //定位按钮与设置的停靠位置的偏移量，默认：Pixel(10, 20)
+      zoomToAccuracy: true, //定位成功后调整地图视野范围使定位位置及精度范围视野内可见，默认：false
+      buttonPosition: 'RB'
+    });
+    map.addControl(geolocation);
+    geolocation.getCurrentPosition();
+    AMap.event.addListener(geolocation, 'complete', onComplete); //返回定位信息
+    AMap.event.addListener(geolocation, 'error', onError); //返回定位出错信息
+  });
+  //解析定位结果
+  function onComplete(data) {
+    var str = [];
+    console.log(data.position);
+    var lat = data.position.getLat();
+    var lng = data.position.getLng();
+    console.log(lat)
+    console.log(lng)
+    AMap.Map("container", {
+      center: [lng, lat],
+      zoom: 14
+    });
+  }
+  //解析定位错误信息
+  function onError(data) {
+    console.log('err');
+  }
 
-  var path = [
-      [116.403322, 39.920255],
-      [116.410703, 39.897555],
-      [116.402292, 39.892353],
-      [116.389846, 39.891365]
-  ]
-
-  var polygon = new AMap.Polygon({
-      path: path,
-      strokeColor: "#FF33FF", 
-      strokeWeight: 6,
-      strokeOpacity: 0.2,
-      fillOpacity: 0.4,
-      fillColor: '#1791fc',
-      zIndex: 50,
-  })
-
-  map.add(polygon)
-  // 缩放地图到合适的视野级别
-  map.setFitView([ polygon ])
-
-  // var polyEditor = new AMap.PolyEditor(map, polygon)
-
-  // polyEditor.on('addnode', function(event) {
-  //     log.info('触发事件：addnode')
-  // })
-
-  // polyEditor.on('adjust', function(event) {
-  //     log.info('触发事件：adjust')
-  // })
-
-  // polyEditor.on('removenode', function(event) {
-  //     log.info('触发事件：removenode')
-  // })
-
-  // polyEditor.on('end', function(event) {
-  //     log.info('触发事件： end')
-  //     // event.target 即为编辑后的多边形对象
-  // })
+  // map = new AMap.Map("container", {
+  //   center: [116.400274, 39.905812],
+  //   zoom: 14
+  // });
+  var polygon = undefined;
+  var path = []
+  var marker;
+  var polyEditor = undefined
 
   //为地图注册click事件获取鼠标点击出的经纬度坐标
-  var clickEventListener = map.on('click', function(e) {
-        // document.getElementById("lnglat").value = e.lnglat.getLng() + ',' + e.lnglat.getLat();
+  var clickEventListener = map.on('click', (e) => {
+    if (path.length >= 3) {
+      console.log(polygon)
+      if (!polygon) {
+        polygon = new AMap.Polygon({
+        path: path,
+        strokeColor: "#FF33FF",
+        strokeWeight: 6,
+        strokeOpacity: 0.2,
+        fillOpacity: 0.4,
+        fillColor: '#1791fc',
+        zIndex: 50
+      })
+      map.add(polygon)
+      // 缩放地图到合适的视野级别
+      map.setFitView([polygon])
+      }
+      polyEditor = new AMap.PolyEditor(map, polygon)
 
-        // if (marker) {
-        //     marker.setMap(null);
-        //     marker = null;
-        // }
-        addMarker(e.lnglat.getLng(),e.lnglat.getLat());
-        //这边是数组
-        // var lnglatXY=[e.lnglat.getLng(),e.lnglat.getLat()];
-        // regeocoder(lnglatXY);
-    });
+      polyEditor.on('addnode', function(event) {
+          log.info('触发事件：addnode')
+      })
 
-    var auto = new AMap.Autocomplete({
-        input: "tipinput"
-    });
+      polyEditor.on('adjust', function(event) {
+          log.info('触发事件：adjust')
+      })
 
-    //注册监听，当选中某条记录时会触发
-    AMap.event.addListener(auto, "select", select);
-    function select(e) {
-        var lng = e.poi.location.lng;
-        var lat = e.poi.location.lat;
-        console.log(e.poi.location.lng);
-        if (e.poi && e.poi.location) {
-            map.setZoom(15);
-            map.setCenter(e.poi.location);
-            addMarker(lng,lat);
-        }
+      polyEditor.on('removenode', function(event) {
+          log.info('触发事件：removenode')
+      })
+
+      polyEditor.on('end', function(event) {
+          log.info('触发事件： end')
+          // event.target 即为编辑后的多边形对象
+      })
+      return false;
     }
+    // 获取经纬度放入path数组
+    path.push([e.lnglat.getLng(), e.lnglat.getLat()])
+    addMarker(e.lnglat.getLng(), e.lnglat.getLat());
+  });
 
-    var marker;
-    // 实例化点标记
-    function addMarker(lng,lat) {
-        marker = new AMap.Marker({
-            icon: "https://webapi.amap.com/theme/v1.3/markers/n/mark_b.png",
-            position: [lng, lat]
-        });
-        marker.setMap(map);
+  var auto = new AMap.Autocomplete({
+    input: "tipinput"
+  });
+
+  //注册监听，当选中某条记录时会触发
+  AMap.event.addListener(auto, "select", select);
+  function select(e) {
+    var lng = e.poi.location.lng;
+    var lat = e.poi.location.lat;
+    if (e.poi && e.poi.location) {
+      map.setZoom(15);
+      map.setCenter(e.poi.location);
+      addMarker(lng, lat);
     }
+  }
+
+  
+  // 实例化点标记
+  function addMarker(lng, lat) {
+    marker = new AMap.Marker({
+      icon: "https://webapi.amap.com/theme/v1.3/markers/n/mark_b.png",
+      position: [lng, lat]
+    });
+    marker.setMap(map);
+  }
 </script>
 
 </html>
