@@ -69,7 +69,7 @@
 <script src="https://unpkg.com/vue/dist/vue.js"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <!-- <script src="https://webapi.amap.com/maps?v=1.4.15&key=b1e64030afdd4f85f35e3da7ffb33078&plugin=AMap.PolyEditor"></script> -->
-<script src="https://webapi.amap.com/maps?v=1.4.15&key=b1e64030afdd4f85f35e3da7ffb33078"></script>
+<!-- <script src="https://webapi.amap.com/maps?v=1.4.15&key=b1e64030afdd4f85f35e3da7ffb33078"></script> -->
 <script src="https://webapi.amap.com/maps?v=1.4.15&key=b1e64030afdd4f85f35e3da7ffb33078&plugin=AMap.Geocoder"></script>
 <script src="./js/position.js"></script>
 <script>
@@ -95,23 +95,24 @@
       deviceIndex() {
         let index = this.deviceIndex
         let deviceList = this.deviceList
-        let terminalSn = deviceList[index].terminalSn
-        let memName = '11'
         // if (deviceList[index].member.hasOwnProperty('memName')) {
         //   memName = deviceList[index].member.memName
         // }
-        axios.get(`/geo/location/latest/${terminalSn}`)
+        axios.get(`/terminal/state/${deviceList[index].terminalSn}`)
+        // axios.get(`/geo/location/latest/${terminalSn}`)
           .then(res => {
             if (res.status == 200) {
               this.deviceInfo = res.data.payload
-              this.deviceInfo.memName = memName
+              this.deviceInfo.memName = deviceList[index].memName
+              this.deviceInfo['avatar'] = deviceList[index].avatar
               this.deviceInfo['pastTima'] = showTime(this.deviceInfo.timestamp)
               let geocoder = new AMap.Geocoder({
                 radius: 1000,
+                // resizeEnable: true,
                 extensions: "all"
               });
 
-              let position = [this.deviceInfo.lngValue, this.deviceInfo.latValue]
+              let position = [this.deviceInfo.lastCoordLng, this.deviceInfo.lastCoordLat]
               geocoder.getAddress(position, (status, result) => {
                 if (status === 'complete' && result.info === 'OK') {
                   this.deviceInfo['address'] = result.regeocode.formattedAddress
