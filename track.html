@@ -13,7 +13,7 @@
 <body>
   <div class="mapCon" id="container"></div>
   <div id="trackCon">
-    <div class="topInfo" @click="selDevice = true">
+    <div class="topInfo" @click="selDevice">
       <span>选择</span>
       <img src="./image/right.png" alt="">
     </div>
@@ -25,7 +25,7 @@
           <ul class="deviceList">
             <li :class="{'active':deviceIndex == index}" v-for="(item, index) in deviceList" data-name="deviceIndex"
               :data-index="index" @click="selDataClick">
-              {{item.name}}
+              {{item.memName}}
             </li>
           </ul>
           <ul class="trackTime">
@@ -105,17 +105,11 @@
         this.userInfo = getPageData()
       },
       getDeviceList() {
-        this.deviceList = [
-          {name: '设备1', id: '1'},
-          {name: '设备2', id: '1'},
-          {name: '设备3', id: '1'},
-          {name: '设备4', id: '1'},
-          {name: '设备5', id: '1'},
-        ]
         axios.get(`/terminal/list`)
           .then(res => {
             if (res.status == 200) {
               let list = res.data.payload
+              let deviceList = []
               for (let i = 0; i < list.length;i++) {
                 let itemNode = {}
                 itemNode['avatar'] = list[i].member.avatar
@@ -137,12 +131,13 @@
                 itemNode['timestamp'] = list[i].state.timestamp
                 itemNode['voltage'] = list[i].state.voltage
                 itemNode['voltageRange'] = list[i].state.voltageRange
-                console.log(itemNode)
-                this.deviceList.push(itemNode)
+                deviceList.push(itemNode)
               }
+              this.deviceList = deviceList
+              this.selDevice = true
               console.log(this.deviceList)
               // this.deviceList = this.dataConvert(this.deviceList)
-              markersShow(this.deviceList)
+              // markersShow(this.deviceList)
             }
           })
           .catch(function (error) { // 请求失败处理
@@ -173,11 +168,28 @@
         if (this.deviceIndex != null && this.tiemIndex != null) {
           this.deviceNodeInfo = this.deviceList[this.deviceIndex];
           this.time = this.timeList[this.tiemIndex];
-          this.selDevice = false;
-          startAnimation()
+          // 根据设备及时间加载轨迹数据
+          this.getTrackData()
         } else {
           alert('请选择设备及时间')
         }
+      },
+      getTrackData() {
+        // /geo/location/locus/{terminalSn}/{date}
+        axios.get(`/geo/location/locus/${this.deviceNodeInfo.terminalSn}/${this.time}`)
+          .then(res => {
+            if (res.status == 200) {
+              this.selDevice = false;
+              // 执行轨迹播放
+              startAnimation()
+              // this.deviceList = this.dataConvert(this.deviceList)
+              // markersShow(this.deviceList)
+            }
+          })
+          .catch(function (error) { // 请求失败处理
+            console.log(error);
+          });
+        
       },
       openPolyEditor() {
         polyEditor.open()
