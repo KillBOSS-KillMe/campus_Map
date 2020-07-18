@@ -9,6 +9,9 @@ function axiosInit() {
   axios.defaults.headers.common['Authorization'] = userInfo.token;
   axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 }
+// 二维数组转一维数组
+function flatten(arr) { return [].concat( ...arr.map(x => Array.isArray(x) ? flatten(x) : x) ) }
+// 获取所有URL参数
 function getPageData() {
   // 通过url参数获取
   // file:///D:/workspace/campus_Map/fence.html?openid=10
@@ -24,6 +27,17 @@ function getPageData() {
     }
   }
   return theRequest
+}
+// 获取单个URL参数
+function getUrlParam(name){
+  // 用该属性获取页面 URL 地址从问号 (?) 开始的 URL（查询部分）
+  var url = window.location.search;
+  // 正则筛选地址栏
+  var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+  // 匹配目标参数
+  var result = url.substr(1).match(reg);
+  //返回参数值
+  return result ? decodeURIComponent(result[2]) : null;
 }
 function fun_date(num) {
   var date1 = new Date();

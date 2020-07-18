@@ -30,6 +30,9 @@
         结束编辑
       </button>
     </div>
+    <div class="saveMapFance" v-if="saveMap">
+      <div @click="saveMapData">保存围栏</div>
+    </div>
   </div>
 </body>
 <script src="./js/public.js"></script>
@@ -43,6 +46,8 @@
 <!-- <script src="./js/fance.js"></script> -->
 <script>
   let userInfo = getPageData()
+  // 解决文字乱码问题
+  userInfo.fenceName = getUrlParam("fenceName")
   console.log(userInfo)
   // `${url}?token=${token}&fenceName=${fenceName}&deviceInfo=${deviceInfo}&alarmType=${alarmType}&statusSys=${statusSys}`
   userInfo['token'] = 'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyQ29kZSI6Im51bGxfemp4aiIsImxvZ2luQ29kZSI6IjEzMzU5MjAxODQzIiwibW9iaWxlIjoiIiwidXNlck5hbWUiOiIxMzM1OTIwMTg0MyIsInVzZXJUeXBlIjoibWVtYmVyIiwiaWF0IjoxNTk0NTI0Mjg5fQ.Tec2zF7P0Ng52j6F9VGLuzGGozkM2ikAWvqq2n8-FWc'
@@ -51,7 +56,8 @@
     data: {
       userInfo: userInfo,
       fenceNodeInfo: {},
-      path: [1]
+      path: [],
+      saveMap: false
     },
     mounted() {
       // 获取用户信息
@@ -71,17 +77,20 @@
       },
       saveMapData() {
         // 保存地图数据
-        axios.get(`/geo/fence/save`)
+        axios.post(`/geo/fence/save`, {
+          params: {
+            coords: flatten(this.path).toString(),
+            fenceName: this.userInfo.fenceName,
+            alarmRule: this.userInfo.alarmType,
+            matchTerminalSn: this.userInfo.matchTerminalSn,
+            effect: this.userInfo.effect
+          }
+        })
           .then(res => {
             if (res.status == 200) {
-              let list = res.data.payload
-              console.log(this.deviceList)
-              for (let i = 0; i < list.length; i++) {
-                list[i]['sel'] = 0
+              if (confirm('创建成功，是否进入地图页?')) {
+                window.location.href = 'fence.html'
               }
-              this.deviceList = list
-              // this.deviceList = this.dataConvert(this.deviceList)
-              markersShow(this.deviceList)
             }
           })
           .catch(function (error) { // 请求失败处理
@@ -94,6 +103,7 @@
 
 
   var map, geolocation;
+  var clickIstrue = false;
   //加载地图，调用浏览器定位服务
   map = new AMap.Map('container', {
     resizeEnable: true
@@ -116,6 +126,7 @@
     var str = [];
     var lat = data.position.getLat();
     var lng = data.position.getLng();
+    clickIstrue = true
     AMap.Map("container", {
       center: [lng, lat],
       zoom: 14
@@ -132,6 +143,10 @@
 
   //为地图注册click事件获取鼠标点击出的经纬度坐标
   var clickEventListener = map.on('click', (e) => {
+    // 未加载到当前位置前禁止点击
+    if (clickIstrue == false) {
+      return false;
+    }
     if (path.length >= 3) {
       if (!polygon) {
         polygon = new AMap.Polygon({
@@ -171,6 +186,7 @@
           }
           // 获取新的围栏数据
           newMapVue.path = newPath
+          newMapVue.saveMap = true
           console.log(newMapVue.path)
         })
       }

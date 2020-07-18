@@ -575,3 +575,24 @@ body {
     width: 100%;
     height: 100%;
   }
+  .saveMapFance {
+    position: absolute;
+    bottom: 30px;
+    left: 0;
+    width: 100%;
+    height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .saveMapFance div {
+    width: 80%;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #3A79F7;
+    border-radius: 10px;
+    font-size: 20px;
+    color: #fff;
+  }
