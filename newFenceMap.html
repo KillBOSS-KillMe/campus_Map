@@ -36,8 +36,8 @@
 <script src="./js/vue.min.js"></script>
 <script src="https://unpkg.com/vue/dist/vue.js"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<script src="https://webapi.amap.com/maps?v=1.4.15&key=b1e64030afdd4f85f35e3da7ffb33078&plugin=AMap.PolyEditor"></script>
-<script src="https://webapi.amap.com/maps?v=1.4.15&key=b1e64030afdd4f85f35e3da7ffb33078&plugin=AMap.Autocomplete&plugin=AMap.Geocoder"></script>
+
+<script src="https://webapi.amap.com/maps?v=1.4.15&key=b1e64030afdd4f85f35e3da7ffb33078&plugin=AMap.Autocomplete&plugin=AMap.Geocoder&plugin=AMap.PolyEditor"></script>
 <script type="text/javascript" src="https://cache.amap.com/lbs/static/addToolbar.js"></script>
 <script src="./js/demoutils.js"></script>
 <!-- <script src="./js/fance.js"></script> -->
@@ -46,11 +46,12 @@
   console.log(userInfo)
   // `${url}?token=${token}&fenceName=${fenceName}&deviceInfo=${deviceInfo}&alarmType=${alarmType}&statusSys=${statusSys}`
   userInfo['token'] = 'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyQ29kZSI6Im51bGxfemp4aiIsImxvZ2luQ29kZSI6IjEzMzU5MjAxODQzIiwibW9iaWxlIjoiIiwidXNlck5hbWUiOiIxMzM1OTIwMTg0MyIsInVzZXJUeXBlIjoibWVtYmVyIiwiaWF0IjoxNTk0NTI0Mjg5fQ.Tec2zF7P0Ng52j6F9VGLuzGGozkM2ikAWvqq2n8-FWc'
-  new Vue({
+  let newMapVue = new Vue({
     el: '#fanceCon',
     data: {
       userInfo: userInfo,
       fenceNodeInfo: {},
+      path: [1]
     },
     mounted() {
       // 获取用户信息
@@ -67,6 +68,25 @@
       },
       closePolyEditor() {
         polyEditor.close()
+      },
+      saveMapData() {
+        // 保存地图数据
+        axios.get(`/geo/fence/save`)
+          .then(res => {
+            if (res.status == 200) {
+              let list = res.data.payload
+              console.log(this.deviceList)
+              for (let i = 0; i < list.length; i++) {
+                list[i]['sel'] = 0
+              }
+              this.deviceList = list
+              // this.deviceList = this.dataConvert(this.deviceList)
+              markersShow(this.deviceList)
+            }
+          })
+          .catch(function (error) { // 请求失败处理
+            console.log(error);
+          });
       }
     }
   })
@@ -94,11 +114,8 @@
   //解析定位结果
   function onComplete(data) {
     var str = [];
-    console.log(data.position);
     var lat = data.position.getLat();
     var lng = data.position.getLng();
-    console.log(lat)
-    console.log(lng)
     AMap.Map("container", {
       center: [lng, lat],
       zoom: 14
@@ -108,11 +125,6 @@
   function onError(data) {
     console.log('err');
   }
-
-  // map = new AMap.Map("container", {
-  //   center: [116.400274, 39.905812],
-  //   zoom: 14
-  // });
   var polygon = undefined;
   var path = []
   var marker;
@@ -121,39 +133,48 @@
   //为地图注册click事件获取鼠标点击出的经纬度坐标
   var clickEventListener = map.on('click', (e) => {
     if (path.length >= 3) {
-      console.log(polygon)
       if (!polygon) {
         polygon = new AMap.Polygon({
-        path: path,
-        strokeColor: "#FF33FF",
-        strokeWeight: 6,
-        strokeOpacity: 0.2,
-        fillOpacity: 0.4,
-        fillColor: '#1791fc',
-        zIndex: 50
-      })
-      map.add(polygon)
-      // 缩放地图到合适的视野级别
-      map.setFitView([polygon])
-      }
-      polyEditor = new AMap.PolyEditor(map, polygon)
+          path: path,
+          strokeColor: "#FF33FF",
+          strokeWeight: 6,
+          strokeOpacity: 0.2,
+          fillOpacity: 0.4,
+          fillColor: '#1791fc',
+          zIndex: 50
+        })
+        map.add(polygon)
+        // 缩放地图到合适的视野级别
+        map.setFitView([polygon])
+        polyEditor = new AMap.PolyEditor(map, polygon)
+        // 打开地图编辑
+        polyEditor.open()
+        polyEditor.on('addnode', function (event) {
+          console.log('触发事件：addnode')
+        })
 
-      polyEditor.on('addnode', function(event) {
-          log.info('触发事件：addnode')
-      })
+        polyEditor.on('adjust', function (event) {
+          console.log('触发事件：adjust')
+        })
 
-      polyEditor.on('adjust', function(event) {
-          log.info('触发事件：adjust')
-      })
+        polyEditor.on('removenode', function (event) {
+          console.log('触发事件：removenode')
+        })
 
-      polyEditor.on('removenode', function(event) {
-          log.info('触发事件：removenode')
-      })
-
-      polyEditor.on('end', function(event) {
-          log.info('触发事件： end')
+        polyEditor.on('end', function (event) {
+          console.log('触发事件： end')
           // event.target 即为编辑后的多边形对象
-      })
+          let newPath = []
+          let allPath = event.target.w.path
+          for (let i = 0; i < allPath.length; i++) {
+            newPath.push([allPath[i].lng, allPath[i].lat])
+          }
+          // 获取新的围栏数据
+          newMapVue.path = newPath
+          console.log(newMapVue.path)
+        })
+      }
+
       return false;
     }
     // 获取经纬度放入path数组
@@ -177,7 +198,7 @@
     }
   }
 
-  
+
   // 实例化点标记
   function addMarker(lng, lat) {
     marker = new AMap.Marker({
