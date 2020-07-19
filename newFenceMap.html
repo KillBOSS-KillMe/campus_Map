@@ -139,6 +139,7 @@
   var polygon = undefined;
   var path = []
   var marker;
+  var markers = []
   var polyEditor = undefined
 
   //为地图注册click事件获取鼠标点击出的经纬度坐标
@@ -147,8 +148,9 @@
     if (clickIstrue == false) {
       return false;
     }
-    if (path.length >= 3) {
+    if (path.length == 3) {
       if (!polygon) {
+        map.remove(markers);
         polygon = new AMap.Polygon({
           path: path,
           strokeColor: "#FF33FF",
@@ -221,6 +223,7 @@
       icon: "https://webapi.amap.com/theme/v1.3/markers/n/mark_b.png",
       position: [lng, lat]
     });
+    markers.push(marker)
     marker.setMap(map);
   }
 </script>
