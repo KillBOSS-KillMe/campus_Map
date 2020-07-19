@@ -107,6 +107,15 @@
   map = new AMap.Map('container', {
     resizeEnable: true
   });
+  AMap.plugin([
+    'AMap.ToolBar',
+  ], function () {
+    // 在图面添加工具条控件，工具条控件集成了缩放、平移、定位等功能按钮在内的组合控件
+    map.addControl(new AMap.ToolBar({
+      // 简易缩放模式，默认为 false
+      liteStyle: true
+    }));
+  });
   map.plugin('AMap.Geolocation', function () {
     geolocation = new AMap.Geolocation({
       enableHighAccuracy: true, //是否使用高精度定位，默认:true

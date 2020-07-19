@@ -4,18 +4,15 @@
 var map = new AMap.Map("container", {
   resizeEnable: true,
   zoom: 13,
-  center: [116.397428, 39.90923],
-  resizeEnable: true
+  center: [116.397428, 39.90923]
 });
 
 
 function markersShow(deviceList) {
   var markers = [];
   map = new AMap.Map("container", {
-    resizeEnable: true,
     zoom: 13,
-    center: [deviceList[0].lastCoordLng, deviceList[0].lastCoordLat],
-    resizeEnable: true
+    center: [deviceList[0].lastCoordLng, deviceList[0].lastCoordLat]
   });
   AMap.plugin([
     'AMap.ToolBar',

@@ -209,7 +209,15 @@
     center: [116.397428, 39.90923],
     zoom: 17
   });
-
+  AMap.plugin([
+    'AMap.ToolBar',
+  ], function () {
+    // 在图面添加工具条控件，工具条控件集成了缩放、平移、定位等功能按钮在内的组合控件
+    map.addControl(new AMap.ToolBar({
+      // 简易缩放模式，默认为 false
+      liteStyle: true
+    }));
+  });
   marker = new AMap.Marker({
     map: map,
     position: [116.478935, 39.997761],
