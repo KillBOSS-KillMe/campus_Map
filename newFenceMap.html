@@ -80,9 +80,9 @@
         axios.post(`/geo/fence/save`, {
             coords: flatten(this.path).toString(),
             fenceName: this.userInfo.fenceName,
-            alarmRule: this.userInfo.alarmType,
+            alarmRule: parseInt(this.userInfo.alarmType),
             matchTerminalSn: this.userInfo.matchTerminalSn,
-            effect: this.userInfo.effect
+            effect: parseInt(this.userInfo.effect)
           
         })
           .then(res => {

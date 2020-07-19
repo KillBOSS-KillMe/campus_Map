@@ -38,7 +38,7 @@
           <img src="./image/station.png" alt="" v-if="deviceInfo.lastCoordType == 4" />
         </div>
         <div class="mainInfo">
-          <span class="address">{{deviceInfo.address}}</span>
+          <span class="address">{{address}}</span>
         </div>
         <div class="operating" @click="positionRefresh">
           <img src="./image/refresh.png" :data-index="deviceIndex" alt="" />
@@ -93,9 +93,9 @@
         voltageRange: "",
         memName: "",
         avatar: "",
-        pastTima: "",
-        address: ""
+        pastTima: ""
       },
+      address: '',
       deviceInfoShow: false,
       userInfo: userInfo,
       deviceIndex: null,
@@ -133,7 +133,8 @@
               let position = [this.deviceInfo.lastCoordLng, this.deviceInfo.lastCoordLat]
               geocoder.getAddress(position, (status, result) => {
                 if (status === 'complete' && result.info === 'OK') {
-                  this.deviceInfo['address'] = result.regeocode.formattedAddress
+                  this.address = result.regeocode.formattedAddress
+                  // this.deviceInfo['address'] = result.regeocode.formattedAddress
                   
                   this.deviceInfoShow = true
                   console.log('=========================')
@@ -215,18 +216,10 @@
               });
 
               let position = [this.deviceInfo.lastCoordLng, this.deviceInfo.lastCoordLat]
-              console.log(position)
               geocoder.getAddress(position, (status, result) => {
                 
                 if (status === 'complete' && result.info === 'OK') {
-                  console.log(result.regeocode.formattedAddress)
-                console.log(status)
-                console.log(result)
-                  this.deviceInfo['address'] = result.regeocode.formattedAddress
-                  
-                  // this.deviceInfoShow = true
-                  console.log('=========================')
-                  console.log(this.deviceInfo)
+                this.address = result.regeocode.formattedAddress
                 }
               })
               // geolocationState 1 gps  3无线网  4基站

@@ -210,12 +210,11 @@
         let deviceList = this.deviceList
         let sn = []
         for (let i = 0; i < deviceList.length; i++) {
-          if (deviceList[i].sel = 1) {
+          if (deviceList[i].sel == 1) {
             sn.push(deviceList[i].terminalSn)
           }
         }
         sn.toString()
-        // console.log(sn)
         if (
           this.deviceNode.fenceName == '' ||
           // this.deviceNode.deviceNameAll == '' || 
@@ -230,7 +229,6 @@
         let statusSys = this.statusSysList[this.statusSysIndex].id;
         let token = this.userInfo.token;
         let url = e.target.dataset.url;
-        
         window.location.href = `${url}?token=${token}&fenceName=${this.deviceNode.fenceName}&matchTerminalSn=${sn}&alarmType=${alarmType}&effect=${statusSys}`
       }
     }
