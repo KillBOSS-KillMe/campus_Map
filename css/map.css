@@ -307,7 +307,7 @@ body {
 .fenceInfoCon {
     position: relative;
     width: 95%;
-    height: 95px;
+    height: 107px;
     padding: 20px 0;
     margin: auto    ;
     border-radius: 20px;
@@ -340,6 +340,27 @@ body {
     width: 10px;
     height: 10px;
     margin-left: 10px;
+}
+.fenceInfoCon h4 input {
+  width: 80px;
+  border-width: 0;
+  font-size: 15px;
+  color: #333;
+  border-bottom: 1px solid #999;
+  padding: 5px 0px;
+}
+.fenceInfoCon h4 span {
+  font-size: 15px;
+  color: #999;
+  border: 1px solid #999;
+  border-radius: 5px;
+  padding: 5px 10px;
+  margin-left: 5px;
+}
+.fenceInfoCon h4 .active {
+  color: #fff;
+  background-color: #3A79F7;
+  border-color: #3A79F7;
 }
 .fenceInfoCon ul {
     display: flex;

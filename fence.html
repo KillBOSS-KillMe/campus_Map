@@ -47,9 +47,14 @@
     <div class="fenceInfo" v-if="sysFence">
       <div class="fenceInfoCon">
         <button @click="sysFence = false">关闭</button>
-        <h4>
+        <h4 v-if="fenceNameModify == false">
           {{fenceNodeInfo.fenceName}}
-          <img src="./image/edit.png" alt="">
+          <img src="./image/edit.png" @click="fenceNameModify = true" alt="">
+        </h4>
+        <h4 v-if="fenceNameModify == true">
+          <input type="text" :model="fenceNodeInfo.fenceName" @input="setFenceName" />
+          <span @click="modifyFence" class="active">保存</span>
+          <span @click="fenceNameModify = false">取消</span>
         </h4>
         <ul>
           <li @click="selDevice = true">
@@ -171,6 +176,7 @@
         { name: '不生效', id: '0' },
         { name: '生效', id: '1' }
       ],
+      fenceNameModify: false,
       fenceModify: false
     },
     watch: {
@@ -230,6 +236,10 @@
         let name = e.target.dataset.name;
         let index = e.target.dataset.index;
         this.fenceIndex = index
+      },
+      // 获取设备名称
+      setFenceName(e) {
+        this.fenceNodeInfo.fenceName = e.target.value;
       },
       getDeviceList() {
         axios.get(`/terminal/list`)
@@ -312,10 +322,10 @@
       modifyFence() {
         // 关闭所有弹框
         this.closeInstall()
+        this.fenceNameModify = false
         // 保存地图数据
         let deviceList = this.deviceList
         let fenceNodeInfo = this.fenceNodeInfo
-        // console.log(fenceNodeInfo)
         let matchTerminalSn = []
         for (let i = 0; i < deviceList.length; i++) {
           if (deviceList[i].sel == 1) {
@@ -325,17 +335,9 @@
         matchTerminalSn = matchTerminalSn.toString()
         let id = fenceNodeInfo.id;
         let coords = this.fenceInfo;
-        let fenceName = this.fenceName || fenceNodeInfo.fenceName;
-        // console.log(this.alarmTypeIndex)
-        // console.log(this.alarmTypeList)
+        let fenceName = fenceNodeInfo.fenceName;
         let alarmRule = parseInt(fenceNodeInfo.alarmRule);
         let effect = parseInt(fenceNodeInfo.effect);
-        // console.log(`id-----${id}`)
-        // console.log(`coords-----${coords}`)
-        // console.log(`fenceName-----${fenceName}`)
-        // console.log(`alarmRule-----${alarmRule}`)
-        // console.log(`effect-----${effect}`)
-        // return false
         axios.post(`/geo/fence/save`, {
           id: id,
           coords: coords,
