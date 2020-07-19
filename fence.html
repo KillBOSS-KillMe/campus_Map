@@ -141,7 +141,7 @@
 <script>
   let userInfo = getPageData()
   userInfo['token'] = 'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyQ29kZSI6Im51bGxfemp4aiIsImxvZ2luQ29kZSI6IjEzMzU5MjAxODQzIiwibW9iaWxlIjoiIiwidXNlck5hbWUiOiIxMzM1OTIwMTg0MyIsInVzZXJUeXBlIjoibWVtYmVyIiwiaWF0IjoxNTk0NTI0Mjg5fQ.Tec2zF7P0Ng52j6F9VGLuzGGozkM2ikAWvqq2n8-FWc'
-  new Vue({
+  var fenceVue = new Vue({
     el: '#fanceCon',
     data: {
       userInfo: userInfo,
@@ -170,7 +170,13 @@
       statusSysList: [
         { name: '不生效', id: '0' },
         { name: '生效', id: '1' }
-      ]
+      ],
+      fenceModify: false
+    },
+    watch: {
+      fenceModify() {
+        this.modifyFence()
+      }
     },
     mounted() {
       // 获取用户信息
@@ -178,7 +184,7 @@
       axiosInit()
       // 获取围栏列表
       this.getFenceList()
-      
+
     },
     methods: {
       goPage(e) {
@@ -200,8 +206,8 @@
                 }
                 this.fenceList = fenceList
                 this.fenceNodeInfo = fenceList[0]
-                this.alarmTypeIndex = parseInt(this.fenceNodeInfo.alarmRule) 
-                this.statusSysIndex = parseInt(this.fenceNodeInfo.effect) 
+                this.alarmTypeIndex = parseInt(this.fenceNodeInfo.alarmRule)
+                this.statusSysIndex = parseInt(this.fenceNodeInfo.effect)
                 this.fenceInfo = this.fenceNodeInfo.coords
                 fenceShow(this.fenceInfo)
                 // 获取设备列表
@@ -275,8 +281,8 @@
       selectedFence() {
         if (this.fenceIndex != null) {
           this.fenceNodeInfo = this.fenceList[this.fenceIndex];
-          this.alarmTypeIndex = parseInt(this.fenceNodeInfo.alarmRule) 
-          this.statusSysIndex = parseInt(this.fenceNodeInfo.effect) 
+          this.alarmTypeIndex = parseInt(this.fenceNodeInfo.alarmRule)
+          this.statusSysIndex = parseInt(this.fenceNodeInfo.effect)
           this.selFence = false;
           this.sysFence = true;
           this.fenceInfo = this.fenceNodeInfo.coords
@@ -309,7 +315,7 @@
         // 保存地图数据
         let deviceList = this.deviceList
         let fenceNodeInfo = this.fenceNodeInfo
-        console.log(fenceNodeInfo)
+        // console.log(fenceNodeInfo)
         let matchTerminalSn = []
         for (let i = 0; i < deviceList.length; i++) {
           if (deviceList[i].sel == 1) {
@@ -317,19 +323,18 @@
           }
         }
         matchTerminalSn = matchTerminalSn.toString()
-        console.log(matchTerminalSn)
         let id = fenceNodeInfo.id;
         let coords = this.fenceInfo;
         let fenceName = this.fenceName || fenceNodeInfo.fenceName;
-        console.log(this.alarmTypeIndex)
-        console.log(this.alarmTypeList)
+        // console.log(this.alarmTypeIndex)
+        // console.log(this.alarmTypeList)
         let alarmRule = parseInt(fenceNodeInfo.alarmRule);
         let effect = parseInt(fenceNodeInfo.effect);
-        console.log(`id-----${id}`)
-        console.log(`coords-----${coords}`)
-        console.log(`fenceName-----${fenceName}`)
-        console.log(`alarmRule-----${alarmRule}`)
-        console.log(`effect-----${effect}`)
+        // console.log(`id-----${id}`)
+        // console.log(`coords-----${coords}`)
+        // console.log(`fenceName-----${fenceName}`)
+        // console.log(`alarmRule-----${alarmRule}`)
+        // console.log(`effect-----${effect}`)
         // return false
         axios.post(`/geo/fence/save`, {
           id: id,
@@ -413,12 +418,20 @@
 
     polyEditor.on('end', function (event) {
       console.log('触发事件： end')
-      log.info('触发事件： end')
-      // 保存围栏地址
-      console.log(polygon)
-      let newFenceData = polygon.w.path;
-      console.log(newFenceData)
       // event.target 即为编辑后的多边形对象
+      let newPath = []
+      let allPath = event.target.w.path
+      for (let i = 0; i < allPath.length; i++) {
+        newPath.push([allPath[i].lng, allPath[i].lat])
+      }
+      newPath = flatten(newPath).toString()
+      if (newPath == fenceVue.fenceInfo) {
+        return false
+      }
+      // 获取新的围栏数据
+      fenceVue.fenceInfo = newPath
+      // 监听围栏修改
+      fenceVue.fenceModify = !fenceVue.fenceModify
     })
   }
 
