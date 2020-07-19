@@ -341,9 +341,8 @@
         })
           .then(res => {
             if (res.status == 200) {
-              // if (confirm('创建成功，是否进入地图页?')) {
-              //   window.location.href = 'fence.html'
-              // }
+              // 重新获取围栏列表,刷新围栏
+              this.getFenceList()
             }
           })
           .catch(function (error) { // 请求失败处理
