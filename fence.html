@@ -15,7 +15,7 @@
   <div class="mapCon" id="container"></div>
   <div id="fanceCon">
     <div class="topInfo" @click="selFence = true">
-      <span>{{fenceNodeInfo.name || '选择'}}</span>
+      <span>{{fenceNodeInfo.fenceName || '选择'}}</span>
       <img src="./image/right.png" alt="">
     </div>
     <div class="elData" v-if="selFence">
@@ -25,7 +25,7 @@
         <ul>
           <li :class="{'active':fenceIndex == index}" v-for="(item, index) in fenceList" data-name="fenceIndex"
             :data-index="index" @click="selDataClick">
-            {{item.name}}
+            {{item.fenceName}}
             <img class="icon" src="./image/active.png" v-if="fenceIndex == index" alt="">
           </li>
         </ul>
@@ -140,7 +140,7 @@
               this.fenceList = res.data.payload
               if (this.fenceList.length > 0) {
                 this.fenceNodeInfo = this.fenceList[0]
-                fenceShow()
+                fenceShow(this.fenceNodeInfo)
               }
             }
           })
@@ -166,7 +166,7 @@
           this.selFence = false;
           this.sysFence = true;
           // 围栏显示
-          fenceShow()
+          fenceShow(this.fenceNodeInfo)
         } else {
           alert('请选择设备')
         }
@@ -198,19 +198,18 @@
   var polyEditor;
   var map;
   var polygon;
-  function fenceShow() {
+  function fenceShow(fenceInfo) {
+    console.log(fenceInfo)
+    let coords = fenceInfo.coords.split(",")
+    var fenceData = []
+    for (let i = 0; i < coords.length; i+= 2) {
+      fenceData.push([coords[i], coords[i + 1]])
+    }
+    console.log(fenceData)
     map = new AMap.Map("container", {
-      center: [116.400274, 39.905812],
+      center: fenceData[0],
       zoom: 14
     });
-
-    var fenceData = [
-      [116.403322, 39.920255],
-      [116.410703, 39.897555],
-      [116.402292, 39.892353],
-      [116.389846, 39.891365]
-    ]
-
     polygon = new AMap.Polygon({
       path: fenceData,
       strokeColor: "#FF33FF",

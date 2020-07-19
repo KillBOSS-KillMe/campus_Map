@@ -41,7 +41,7 @@
           <span class="address">{{address}}</span>
         </div>
         <div class="operating" @click="positionRefresh">
-          <img src="./image/refresh.png" :data-index="deviceIndex" alt="" />
+          <img :class="{ 'imgRotation': imgRefresh }" src="./image/refresh.png" :data-index="deviceIndex" alt="" />
           <span>刷新</span>
         </div>
       </div>
@@ -99,7 +99,8 @@
       deviceInfoShow: false,
       userInfo: userInfo,
       deviceIndex: null,
-      deviceList: []
+      deviceList: [],
+      imgRefresh: false
     },
     mounted() {
       // 获取用户信息
@@ -199,11 +200,13 @@
       positionRefresh() {
         let index = this.deviceIndex
         let deviceList = this.deviceList
+        this.imgRefresh = true
         // if (deviceList[index].member.hasOwnProperty('memName')) {
         //   memName = deviceList[index].member.memName
         // }
         axios.get(`/geo/location/latest/${deviceList[index].terminalSn}`)
           .then(res => {
+            this.imgRefresh = false
             if (res.status == 200) {
               this.deviceInfo = res.data.payload
               this.deviceInfo.memName = deviceList[index].memName
