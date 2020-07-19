@@ -64,7 +64,7 @@
             <div>已打开</div>
             <span>状态设置</span>
           </li>
-          <li>
+          <li @click="delFence">
             <div>删除</div>
             <span>删除围栏</span>
           </li>
@@ -138,7 +138,10 @@
           .then(res => {
             if (res.status == 200) {
               this.fenceList = res.data.payload
-              fenceData()
+              if (this.fenceList.length > 0) {
+                this.fenceNodeInfo = this.fenceList[0]
+                fenceShow()
+              }
             }
           })
           .catch(function (error) { // 请求失败处理
@@ -168,6 +171,22 @@
           alert('请选择设备')
         }
       },
+      delFence() {
+        console.log(this.fenceNodeInfo)
+        if (confirm('确认删除围栏？')) {
+          axios.delete(`/geo/fence/delete/${this.fenceNodeInfo.id}`)
+            .then(res => {
+              console.log(res)
+              if (res.status == 200) {
+                window.location.reload();
+                // this.fenceList = res.data.payload
+              }
+            })
+            .catch(function (error) { // 请求失败处理
+              console.log(error);
+            });
+        }
+      },
       openPolyEditor() {
         polyEditor.open()
       },
@@ -176,8 +195,11 @@
       }
     }
   })
-  function fenceData() {
-    var map = new AMap.Map("container", {
+  var polyEditor;
+  var map;
+  var polygon;
+  function fenceShow() {
+    map = new AMap.Map("container", {
       center: [116.400274, 39.905812],
       zoom: 14
     });
@@ -189,7 +211,7 @@
       [116.389846, 39.891365]
     ]
 
-    var polygon = new AMap.Polygon({
+    polygon = new AMap.Polygon({
       path: fenceData,
       strokeColor: "#FF33FF",
       strokeWeight: 6,
@@ -203,7 +225,7 @@
     // 缩放地图到合适的视野级别
     map.setFitView([polygon])
 
-    var polyEditor = new AMap.PolyEditor(map, polygon)
+    polyEditor = new AMap.PolyEditor(map, polygon)
 
     polyEditor.on('addnode', function (event) {
       console.log('触发事件：addnode')
