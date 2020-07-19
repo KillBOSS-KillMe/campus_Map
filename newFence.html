@@ -57,7 +57,7 @@
     <div class="elData" v-if="alarmType">
       <div class="elDataBg" @click="closeInstall"></div>
       <div class="elDataCon">
-        <h4>选择适用设备</h4>
+        <h4>选择报警类型</h4>
         <ul>
           <li :class="{'active':alarmTypeIndex == index}" v-for="(item, index) in alarmTypeList"
             data-name="alarmTypeIndex" :data-index="index" @click="selDataClick">
@@ -71,7 +71,7 @@
     <div class="elData" v-if="statusSys">
       <div class="elDataBg" @click="closeInstall"></div>
       <div class="elDataCon">
-        <h4>选择适用设备</h4>
+        <h4>选择是否生效</h4>
         <ul>
           <li :class="{'active':statusSysIndex == index}" v-for="(item, index) in statusSysList"
             data-name="statusSysIndex" :data-index="index" @click="selDataClick">
