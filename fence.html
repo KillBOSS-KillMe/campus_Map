@@ -108,7 +108,8 @@
       selFence: false,
       sysFence: false,
       fenceIndex: null,
-      fenceList: []
+      fenceList: [],
+      fenceInfo: ''
     },
     mounted() {
       // 获取用户信息
@@ -140,7 +141,8 @@
               this.fenceList = res.data.payload
               if (this.fenceList.length > 0) {
                 this.fenceNodeInfo = this.fenceList[0]
-                fenceShow(this.fenceNodeInfo)
+                this.fenceInfo = this.fenceNodeInfo.coords
+                fenceShow(this.fenceInfo)
               }
             }
           })
@@ -165,8 +167,9 @@
           this.fenceNodeInfo = this.fenceList[this.fenceIndex];
           this.selFence = false;
           this.sysFence = true;
+          this.fenceInfo = this.fenceNodeInfo.coords
           // 围栏显示
-          fenceShow(this.fenceNodeInfo)
+          fenceShow(this.fenceInfo)
         } else {
           alert('请选择设备')
         }
@@ -198,14 +201,12 @@
   var polyEditor;
   var map;
   var polygon;
-  function fenceShow(fenceInfo) {
-    console.log(fenceInfo)
-    let coords = fenceInfo.coords.split(",")
+  function fenceShow(coords) {
+    coords = coords.split(",")
     var fenceData = []
     for (let i = 0; i < coords.length; i+= 2) {
       fenceData.push([coords[i], coords[i + 1]])
     }
-    console.log(fenceData)
     map = new AMap.Map("container", {
       center: fenceData[0],
       zoom: 14

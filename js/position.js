@@ -17,6 +17,15 @@ function markersShow(deviceList) {
     center: [deviceList[0].lastCoordLng, deviceList[0].lastCoordLat],
     resizeEnable: true
   });
+  AMap.plugin([
+    'AMap.ToolBar',
+  ], function () {
+    // 在图面添加工具条控件，工具条控件集成了缩放、平移、定位等功能按钮在内的组合控件
+    map.addControl(new AMap.ToolBar({
+      // 简易缩放模式，默认为 false
+      liteStyle: true
+    }));
+  });
   for (var i = 0; i < deviceList.length; i++) {
     let listItem = deviceList[i]
     let markerDom = `<div class="markerCon" data-index="10">
