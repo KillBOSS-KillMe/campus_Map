@@ -78,13 +78,12 @@
       saveMapData() {
         // 保存地图数据
         axios.post(`/geo/fence/save`, {
-          params: {
             coords: flatten(this.path).toString(),
             fenceName: this.userInfo.fenceName,
             alarmRule: this.userInfo.alarmType,
             matchTerminalSn: this.userInfo.matchTerminalSn,
             effect: this.userInfo.effect
-          }
+          
         })
           .then(res => {
             if (res.status == 200) {

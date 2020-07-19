@@ -203,7 +203,7 @@
       },
       // 提交值
       submitFenceInfo(e) {
-        // console.log(`fenceName---${this.deviceNode.fenceName}`)
+        console.log(`fenceName---${this.deviceNode.fenceName}`)
         // console.log(`deviceIndex---${this.deviceIndex}`)
         // console.log(`alarmTypeIndex---${this.alarmTypeIndex}`)
         // console.log(`statusSysIndex---${this.statusSysIndex}`)
@@ -217,20 +217,21 @@
         sn.toString()
         console.log(sn)
         if (
-          this.deviceNode.deviceNameAll == '' || 
+          this.deviceNode.fenceName == '' ||
+          // this.deviceNode.deviceNameAll == '' || 
           this.alarmTypeIndex == null || 
           this.statusSysIndex == null
         ) {
           alert('请完善信息');
           return false;
         }
-        let deviceNameAll = this.deviceNode.deviceNameAll
+        // let deviceNameAll = this.deviceNode.deviceNameAll
         let alarmType = this.alarmTypeList[this.alarmTypeIndex].id;
         let statusSys = this.statusSysList[this.statusSysIndex].id;
         let token = this.userInfo.token;
         let url = e.target.dataset.url;
         
-        window.location.href = `${url}?token=${token}&fenceName=${deviceNameAll}&matchTerminalSn=${sn}&alarmType=${alarmType}&effect=${statusSys}`
+        window.location.href = `${url}?token=${token}&fenceName=${this.deviceNode.fenceName}&matchTerminalSn=${sn}&alarmType=${alarmType}&effect=${statusSys}`
       }
     }
   })
