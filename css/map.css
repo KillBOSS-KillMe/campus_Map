@@ -59,6 +59,9 @@ body {
     height: 100vh;
     overflow: hidden;
 }
+.domCon {
+    display: none;
+}
 /* 顶部信息展示 */
 .topInfo {
     position: fixed;

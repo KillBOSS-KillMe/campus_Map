@@ -3,6 +3,10 @@
 // axios.defaults.headers.common['Authorization'] = userInfo.token;
 // axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 // https://www.hwaaogj.com:6443/ste/geo/location/latest/{terminalSn}
+function domConShow() {
+  let domNode = document.getElementsByClassName("domCon")
+  domNode[0].classList.remove("domCon");
+}
 function axiosInit() {
 
   axios.defaults.baseURL = "https://www.hwaaogj.com/ste/";

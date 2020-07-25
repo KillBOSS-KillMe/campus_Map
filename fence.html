@@ -13,7 +13,7 @@
 
 <body class="fanceDom">
   <div class="mapCon" id="container"></div>
-  <div id="fanceCon">
+  <div id="fanceCon" class="domCon">
     <div class="topInfo" @click="selFence = true">
       <span>{{fenceNodeInfo.fenceName || '选择'}}</span>
       <img src="./image/right.png" alt="">
@@ -188,6 +188,7 @@
       // 获取用户信息
       // this.getUserInfo()
       axiosInit()
+      domConShow()
       // 获取围栏列表
       this.getFenceList()
 

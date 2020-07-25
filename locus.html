@@ -12,7 +12,7 @@
 
 <body>
   <div class="mapCon" id="container"></div>
-  <div id="trackCon">
+  <div id="trackCon" class="domCon">
     <div class="topInfo" @click="selDevice">
       <span>选择</span>
       <img src="./image/right.png" alt="">
@@ -91,6 +91,7 @@
     },
     mounted() {
       axiosInit()
+      domConShow()
       // 获取设备列表
       this.getDeviceList()
       // 获取时间列表

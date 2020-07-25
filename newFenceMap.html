@@ -13,7 +13,7 @@
 
 <body class="fanceDom">
   <div class="mapCon" id="container"></div>
-  <div id="fanceCon">
+  <div id="fanceCon" class="domCon">
     <div class="topInfo" @click="selFence = true">
       <span>{{userInfo.fenceName}}</span>
       <img src="./image/right.png" alt="">
@@ -63,6 +63,7 @@
       // 获取用户信息
       // this.getUserInfo()
       axiosInit()
+      domConShow()
     },
     methods: {
       goPage(e) {

@@ -15,7 +15,7 @@
 </head>
 
 <body>
-  <div class="fanceDom" id="newFance">
+  <div class="fanceDom domCon" id="newFance">
     <ul class="form">
       <li id="nameVal">
         <label>围栏名称</label>
@@ -131,6 +131,7 @@
     },
     mounted() {
       axiosInit()
+      domConShow()
       // 获取用户信息
       this.getUserInfo()
       // 获取设备列表
