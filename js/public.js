@@ -5,7 +5,7 @@
 // https://www.hwaaogj.com:6443/ste/geo/location/latest/{terminalSn}
 function axiosInit() {
 
-  axios.defaults.baseURL = "https://www.hwaaogj.com:6443/ste/";
+  axios.defaults.baseURL = "https://www.hwaaogj.com/ste/";
   axios.defaults.headers.common['Authorization'] = userInfo.token;
   axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 }
