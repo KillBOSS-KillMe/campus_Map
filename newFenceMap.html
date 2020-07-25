@@ -48,7 +48,7 @@
   let userInfo = getPageData()
   // 解决文字乱码问题
   userInfo.fenceName = getUrlParam("fenceName")
-  console.log(userInfo)
+  // console.log(userInfo)
   // `${url}?token=${token}&fenceName=${fenceName}&deviceInfo=${deviceInfo}&alarmType=${alarmType}&statusSys=${statusSys}`
   userInfo['token'] = 'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyQ29kZSI6Im51bGxfemp4aiIsIm1vYmlsZSI6IiIsInVzZXJOYW1lIjoiMTMzNTkyMDE4NDMiLCJpYXQiOjE1OTU0MTM2Mzl9.1AIIrcBoPKHrQ9hkYrr6bxcnDIKLEh3SjcbwGAtxIts'
   let newMapVue = new Vue({
@@ -159,6 +159,7 @@
     }
     if (path.length == 3) {
       if (!polygon) {
+        clickIstrue = false
         map.remove(markers);
         polygon = new AMap.Polygon({
           path: path,
