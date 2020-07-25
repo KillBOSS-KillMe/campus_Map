@@ -372,7 +372,9 @@
     coords = coords.split(",")
     var fenceData = []
     for (let i = 0; i < coords.length; i += 2) {
-      fenceData.push([coords[i], coords[i + 1]])
+      if (coords[i] != '' && coords[i + 1] != '') {
+        fenceData.push([coords[i], coords[i + 1]])
+      }
     }
     map = new AMap.Map("container", {
       center: fenceData[0],
