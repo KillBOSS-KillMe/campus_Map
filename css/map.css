@@ -456,7 +456,8 @@ body {
 }
 .deviceInfo .item .mainInfo h4 {
     font-size: 15px;
-    color: #333;
+    font-weight: 600;
+    color: #343434;
 }
 .deviceInfo .item:nth-child(2) .mainInfo {
     margin-top: 10px;
@@ -473,8 +474,8 @@ body {
 }
 .deviceInfo .item .mainInfo .address {
     padding-right: 10px;
-    font-size: 15px;
-    color: #4E4E4E;
+    font-size: 12px;
+    color: #6e6e6e;
 }
 .deviceInfo .item .operating {
     width: 60px;

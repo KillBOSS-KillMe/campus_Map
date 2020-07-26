@@ -23,6 +23,7 @@
       <div class="elDataCon">
         <h4>选择电子围栏</h4>
         <ul>
+          <li v-if="fenceList.length == 0">暂无围栏</li>
           <li :class="{'active':fenceIndex == index}" v-for="(item, index) in fenceList" data-name="fenceIndex"
             :data-index="index" @click="selFenceClick">
             {{item.fenceName}}
@@ -219,6 +220,8 @@
                 fenceShow(this.fenceInfo)
                 // 获取设备列表
                 this.getDeviceList()
+              } else {
+                fenceShow("")
               }
             }
           })
@@ -228,6 +231,7 @@
       },
       // 关闭所有选择框
       closeInstall() {
+        this.selFence = false
         this.selDevice = false
         this.alarmType = false
         this.statusSys = false
@@ -375,6 +379,9 @@
       if (coords[i] != '' && coords[i + 1] != '') {
         fenceData.push([coords[i], coords[i + 1]])
       }
+    }
+    if (coords == '') {
+      fenceData[0] = [108.93, 34.27]
     }
     map = new AMap.Map("container", {
       center: fenceData[0],
