@@ -70,6 +70,7 @@ function showTime(timeStr) {
   var mins = Math.floor((totalSecs - days * 24 * 3600 - hours * 3600) / 60);
   var secs = Math.floor((totalSecs - days * 24 * 3600 - hours * 3600 - mins * 60));
   let time = ''
+  console.log(Math.abs(days) + "天" + hours + "小时" + mins + "分钟" + secs + "秒前")
   // if (days != 0) {
   //   time = Math.abs(days) + "天" + hours + "小时" + mins + "分钟" + secs + "秒前";
   // } else if (hours == 0 && mins == 0) {
@@ -79,8 +80,9 @@ function showTime(timeStr) {
   // } else if (hours != 0) {
   //   time = hours + "小时" + mins + "分钟" + secs + "秒前";
   // }
-  if (days != 0) {
+  if (days > 0) {
     time = Math.abs(days) + "天前";
+    // time = Math.abs(days) + "天" + hours + "小时" + mins + "分钟" + secs + "秒前";
   } else if (hours == 0 && mins == 0) {
     time = Math.abs(secs) + "秒前"; 
   } else if (hours == 0 && mins != 0) {
@@ -88,6 +90,7 @@ function showTime(timeStr) {
   } else if (hours != 0) {
     time = Math.abs(hours) + "小时前";
   }
+  console.log(time)
   return time
 }
 
