@@ -526,7 +526,7 @@ body {
   .fanceDom .form li {
     width: 90%;
     height: auto;
-    padding: 20px 0;
+    padding: 15px 0;
     border-bottom: 1px solid #eee;
     display: flex;
     align-items: center;
@@ -632,4 +632,7 @@ body {
     -moz-animation: rotation 3s linear infinite;
     -webkit-animation: rotation 3s linear infinite;
     -o-animation: rotation 3s linear infinite;
+  }
+  .amap-touch-toolbar .amap-zoomcontrol {
+      bottom: 200px !important;
   }

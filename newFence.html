@@ -19,8 +19,7 @@
     <ul class="form">
       <li id="nameVal">
         <label>围栏名称</label>
-        <input type="text" :value="deviceNode.fenceName" v-focus @input="getFenceName" />
-        <img src="./image/right.png" alt="">
+        <input type="text" :value="deviceNode.fenceName" placeholder="请输入围栏名称" v-focus @input="getFenceName" />
       </li>
       <li id="deviceVal" @click="selDevice = true">
         <label>适用设备</label>
@@ -50,6 +49,10 @@
             {{item.member.memName}}
             <img class="icon" src="./image/active.png" v-if="item.sel == 1" alt="">
           </li>
+          <li :class="{'active':selDeviceStr}" @click="selDeviceAllClick">
+            所有设备
+            <img class="icon" src="./image/active.png" v-if="selDeviceStr" alt="">
+          </li>
         </ul>
         <button class="sub" @click="selDevice = false;">确定</button>
       </div>
@@ -59,8 +62,8 @@
       <div class="elDataCon">
         <h4>选择报警类型</h4>
         <ul>
-          <li :class="{'active':alarmTypeIndex == index}" v-for="(item, index) in alarmTypeList"
-            data-name="alarmTypeIndex" :data-index="index" @click="selDataClick">
+          <li :class="{'active':alarmTypeIndex == index}" v-for="(item, index) in alarmTypeList" data-name="alarmTypeIndex"
+            :data-index="index" @click="selDataClick">
             {{item.name}}
             <img class="icon" src="./image/active.png" v-if="alarmTypeIndex == index" alt="">
           </li>
@@ -73,8 +76,8 @@
       <div class="elDataCon">
         <h4>选择是否生效</h4>
         <ul>
-          <li :class="{'active':statusSysIndex == index}" v-for="(item, index) in statusSysList"
-            data-name="statusSysIndex" :data-index="index" @click="selDataClick">
+          <li :class="{'active':statusSysIndex == index}" v-for="(item, index) in statusSysList" data-name="statusSysIndex"
+            :data-index="index" @click="selDataClick">
             {{item.name}}
             <img class="icon" src="./image/active.png" v-if="statusSysIndex == index" alt="">
           </li>
@@ -117,6 +120,7 @@
         alarmType: '',
         statusSys: ''
       },
+      selDeviceStr: false,
       deviceList: [],
       alarmTypeIndex: null,
       alarmTypeList: [
@@ -145,7 +149,15 @@
       getUserInfo() {
         this.userInfo = getPageData()
       },
+      selDeviceAllClick() {
+        this.selDeviceStr = true
+        this.deviceNode.deviceNameAll = "所有设备"
+        for (let i = 0; i < this.deviceList.length; i++) {
+          this.deviceList[i].sel = 0
+        }
+      },
       selDeviceClick(e) {
+        this.selDeviceStr = false
         let index = e.target.dataset.index;
         if (this.deviceList[index].sel == 1) {
           this.deviceList[index].sel = 0
@@ -171,7 +183,7 @@
               }
               this.deviceList = list
               // this.deviceList = this.dataConvert(this.deviceList)
-              markersShow(this.deviceList)
+              // markersShow(this.deviceList)
             }
           })
           .catch(function (error) { // 请求失败处理
@@ -210,16 +222,20 @@
         // console.log(`statusSysIndex---${this.statusSysIndex}`)
         let deviceList = this.deviceList
         let sn = []
-        for (let i = 0; i < deviceList.length; i++) {
-          if (deviceList[i].sel == 1) {
-            sn.push(deviceList[i].terminalSn)
+        if (!this.selDeviceStr) {
+          for (let i = 0; i < deviceList.length; i++) {
+            if (deviceList[i].sel == 1) {
+              sn.push(deviceList[i].terminalSn)
+            }
           }
+          sn.toString()
+        } else {
+          sn = "1"
         }
-        sn.toString()
         if (
           this.deviceNode.fenceName == '' ||
           // this.deviceNode.deviceNameAll == '' || 
-          this.alarmTypeIndex == null || 
+          this.alarmTypeIndex == null ||
           this.statusSysIndex == null
         ) {
           alert('请完善信息');

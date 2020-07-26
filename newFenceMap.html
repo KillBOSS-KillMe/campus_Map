@@ -88,9 +88,9 @@
         })
           .then(res => {
             if (res.status == 200) {
-              if (confirm('创建成功，是否进入地图页?')) {
+              // if (confirm('创建成功，是否进入地图页?')) {
                 window.location.href = 'fence.html'
-              }
+              // }
             }
           })
           .catch(function (error) { // 请求失败处理
@@ -175,7 +175,7 @@
         map.setFitView([polygon])
         polyEditor = new AMap.PolyEditor(map, polygon)
         // 打开地图编辑
-        polyEditor.open()
+        // polyEditor.open()
         polyEditor.on('addnode', function (event) {
           console.log('触发事件：addnode')
         })
