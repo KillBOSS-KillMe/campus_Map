@@ -474,6 +474,7 @@ body {
 }
 .deviceInfo .item .mainInfo .address {
     padding-right: 10px;
+    line-height: 14px;
     font-size: 12px;
     color: #6e6e6e;
 }
@@ -495,9 +496,9 @@ body {
     width: auto;
     height: auto;
     padding: 3px 5px;
-    background-color: #3A79F7;
+    background: rgba(58, 121, 247, .5);
     font-size: 12px;
-    color: #fff;
+    color: #343434;
     border-radius: 20px;
 }
 .deviceInfo .item:nth-child(2) .operating  {
