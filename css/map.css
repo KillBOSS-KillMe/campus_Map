@@ -471,8 +471,16 @@ body {
     border: 1px solid #3A79F7;
     border-radius: 2px;
 }
+.deviceInfo .item .mainInfo .power div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    background-color: #3A79F7;
+}
 .deviceInfo .item .mainInfo .power img {
-    height: 12px;
+    width: 10px;
+    height: 10px;
 }
 .deviceInfo .item .mainInfo h4 {
     font-size: 15px;
