@@ -454,6 +454,26 @@ body {
     justify-content: space-between;
     flex-direction: column;
 }
+.deviceInfo .item .mainInfo .powerCon {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+.deviceInfo .item .mainInfo .power2 {
+    width: 1px;
+    height: 5px;
+    background-color: #3A79F7;
+    margin-right: 5px;
+}
+.deviceInfo .item .mainInfo .power {
+    width: 20px;
+    height: 12px;
+    border: 1px solid #3A79F7;
+    border-radius: 2px;
+}
+.deviceInfo .item .mainInfo .power img {
+    height: 12px;
+}
 .deviceInfo .item .mainInfo h4 {
     font-size: 15px;
     font-weight: 600;

@@ -21,8 +21,11 @@
         </div>
         <div class="mainInfo">
           <h4>{{deviceInfo.memName}}</h4>
-          <div>
-            <img class="power" src="./image/power.png" alt="" />
+          <div class="powerCon">
+            <div class="power">
+              <img src="./image/power.png" :style="'width:'+deviceInfo.voltageRange+'%'" alt="" />
+            </div>
+            <div class="power2"></div>
             {{deviceInfo.voltageRange}}%
           </div>
         </div>
