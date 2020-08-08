@@ -14,7 +14,7 @@
   <div class="mapCon" id="container"></div>
   <div id="trackCon" class="domCon">
     <div class="topInfo" @click="selDeviceClick">
-      <span>选择</span>
+      <span>{{selName ||"选择"}}</span>
       <img src="./image/right.png" alt="">
     </div>
     <div class="elData" v-if="selDevice">
@@ -88,7 +88,8 @@
       deviceIndex: null,
       deviceList: [],
       tiemIndex: null,
-      timeList: []
+      timeList: [],
+      selName: ''
     },
     mounted() {
       axiosInit()
@@ -173,6 +174,7 @@
         if (this.deviceIndex != null && this.tiemIndex != null) {
           this.deviceNodeInfo = this.deviceList[this.deviceIndex];
           this.time = this.timeList[this.tiemIndex];
+          this.selName = `${this.deviceNodeInfo.memName}  ${this.time}`
           // 根据设备及时间加载轨迹数据
           this.getTrackData()
         } else {

@@ -62,6 +62,12 @@ body {
 .domCon {
     display: none;
 }
+.amap-logo{
+    display: none;
+}
+.amap-copyright{
+    opacity:0;
+}
 /* 顶部信息展示 */
 .topInfo {
     position: fixed;
