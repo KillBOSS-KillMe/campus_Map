@@ -477,7 +477,7 @@ body {
 }
 .deviceInfo .item .mainInfo .power {
     width: 20px;
-    height: 12px;
+    height: 9px;
     border: 1px solid #3A79F7;
     border-radius: 2px;
 }
