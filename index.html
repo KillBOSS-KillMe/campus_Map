@@ -160,7 +160,8 @@
       goPage(e) {
         let url = e.target.dataset.url;
 
-        window.location.href = `${url}?token=${this.userInfo.token}`
+        // window.location.href = `${url}?token=${this.userInfo.token}`
+        window.location.replace(`${url}?token=${this.userInfo.token}`)
       },
       getUserInfo() {
         // this.userInfo = getPageData()

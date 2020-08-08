@@ -151,6 +151,11 @@ body {
 .elData .elDataCon li .icon, .elData .elDataConPath li .icon {
     display: none;
 }
+
+.activeBg {
+    background-color: #3a79f7 !important;
+    color: #fff !important;
+}
 .elData .elDataCon .active, .elData .elDataConPath .active {
     font-size: 18px;
     font-weight: 700;

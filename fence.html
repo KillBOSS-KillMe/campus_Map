@@ -120,7 +120,7 @@
         <!-- <button class="sub" @click="runSelDevice = false;deviceIndex = deviceIndexShow">确定</button> -->
       </div>
     </div>
-    <img class="newFance" src="./image/newFance.png" alt="" @click="goPage" data-url="newFence.html">
+    <img class="newFance" src="./image/newFance.png" alt="" @click="goNewFence" data-url="newFence.html">
     <ul class="selMayType">
       <li @click="goPage" data-url="index.html">
         <img src="./image/location.png" alt="">
@@ -196,6 +196,11 @@
     },
     methods: {
       goPage(e) {
+        let url = e.target.dataset.url;
+        window.location.replace(url)
+      },
+      
+      goNewFence(e) {
         let url = e.target.dataset.url;
         window.location.href = url
       },
