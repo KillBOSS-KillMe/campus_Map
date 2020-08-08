@@ -13,7 +13,7 @@
 <body>
   <div class="mapCon" id="container"></div>
   <div id="trackCon" class="domCon">
-    <div class="topInfo" @click="selDevice">
+    <div class="topInfo" @click="selDeviceClick">
       <span>选择</span>
       <img src="./image/right.png" alt="">
     </div>
@@ -145,6 +145,9 @@
             console.log(error);
           });
       },
+      selDeviceClick() {
+        this.selDevice = true
+      },
       getTimeList() {
         let list = []
         for (let i = 0; i > -6; i--) {
@@ -176,7 +179,6 @@
         }
       },
       getTrackData() {
-        // /geo/location/locus/{terminalSn}/{date}
         axios.get(`/geo/location/locus/${this.deviceNodeInfo.terminalSn}/${this.time}`)
           .then(res => {
             if (res.status == 200) {

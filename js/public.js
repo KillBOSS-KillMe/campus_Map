@@ -51,11 +51,13 @@ function fun_date(num) {
   var date2 = new Date(date1);
   date2.setDate(date1.getDate() + num);
   //num是正数表示之后的时间，num负数表示之前的时间，0表示今天
-  var time2 = date2.getFullYear() + "-" + (date2.getMonth() + 1) + "-" + date2.getDate();
+  var time2 = date2.getFullYear() + "-" + completion(date2.getMonth() + 1) + "-" + completion(date2.getDate() );
   console.log(time2);
   return time2;
 }
-
+function completion(s) {
+  return s < 10 ? '0' + s: s;
+}
 function showTime(timeStr) {
   if (timeStr == null || timeStr == '') {
     return;

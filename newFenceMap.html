@@ -55,6 +55,8 @@
     el: '#fanceCon',
     data: {
       userInfo: userInfo,
+      // 围栏的是否可点击
+      editStatus: false,
       fenceNodeInfo: {},
       path: [],
       saveMap: false
@@ -71,7 +73,11 @@
         window.location.href = url
       },
       openPolyEditor() {
-        polyEditor.open()
+        if (!this.editStatus) {
+          this.editStatus = true
+        } else {
+          polyEditor.open()
+        }
       },
       closePolyEditor() {
         polyEditor.close()
@@ -157,6 +163,9 @@
     if (clickIstrue == false) {
       return false;
     }
+    if (!newMapVue.editStatus) {
+      return false;
+    }
     if (path.length == 3) {
       if (!polygon) {
         clickIstrue = false
@@ -175,7 +184,7 @@
         map.setFitView([polygon])
         polyEditor = new AMap.PolyEditor(map, polygon)
         // 打开地图编辑
-        // polyEditor.open()
+        polyEditor.open()
         polyEditor.on('addnode', function (event) {
           console.log('触发事件：addnode')
         })
