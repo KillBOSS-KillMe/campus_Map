@@ -108,8 +108,11 @@
   }
   html{
     overflow-y: scroll;
-  }
+  } 
     
+  input {
+    outline:none
+  }
    /*清除浮动*/
   .clearfix:before,
   .clearfix:after{

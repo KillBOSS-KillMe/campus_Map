@@ -68,6 +68,10 @@ body {
 .amap-copyright{
     opacity:0;
 }
+.amap-geolocation-con {
+    bottom: 413px !important;
+    right: 14.5px !important;
+}
 /* 顶部信息展示 */
 .topInfo {
     position: fixed;
@@ -301,7 +305,7 @@ body {
 .newFance {
     position: fixed;
     right: 20px;
-    bottom: 130px;
+    bottom: 108px;
     width: 50px;
     height: 50px;
 }
