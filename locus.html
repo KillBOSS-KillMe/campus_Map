@@ -73,12 +73,13 @@
 <script src="https://unpkg.com/vue/dist/vue.js"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <!-- <script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.15&key=a00b235d251b6c4498797f45080501a6"></script> -->
-<script language="javascript" src="https://webapi.amap.com/maps?v=1.4.15&key=a00b235d251b6c4498797f45080501a6&plugin=AMap.GraspRoad"></script>
+<script language="javascript"
+  src="https://webapi.amap.com/maps?v=1.4.15&key=a00b235d251b6c4498797f45080501a6&plugin=AMap.GraspRoad"></script>
 <script src="./js/track.js"></script>
 <script>
   let userInfo = getPageData()
   userInfo['token'] = 'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyQ29kZSI6Im51bGxfemp4aiIsIm1vYmlsZSI6IiIsInVzZXJOYW1lIjoiMTMzNTkyMDE4NDMiLCJpYXQiOjE1OTU0MTM2Mzl9.1AIIrcBoPKHrQ9hkYrr6bxcnDIKLEh3SjcbwGAtxIts'
-  new Vue({
+  let vueData = new Vue({
     el: '#trackCon',
     data: {
       userInfo: userInfo,
@@ -181,10 +182,20 @@
       getTrackData() {
         axios.get(`/geo/location/locus/${this.deviceNodeInfo.terminalSn}/${this.time}`)
           .then(res => {
-            if (res.status == 200) {
+            console.log(res)
+            if (res.data.success) {
               this.selDevice = false;
+              let list = res.data.payload
+              lineArr = []
+              for (let i = 0; i < list.length; i++) {
+                let itemArr = [list[i].lngValue, list[i].latValue]
+                lineArr.push(itemArr)
+              }
+              // lineArr = [[116.478935, 39.997761], [116.478939, 39.997825], [116.478912, 39.998549], [116.478912, 39.998549], [116.478998, 39.998555], [116.478998, 39.998555], [116.479282, 39.99856], [116.479658, 39.998528], [116.480151, 39.998453], [116.480784, 39.998302], [116.480784, 39.998302], [116.481149, 39.998184], [116.481573, 39.997997], [116.481863, 39.997846], [116.482072, 39.997718], [116.482362, 39.997718], [116.483633, 39.998935], [116.48367, 39.998968], [116.484648, 39.999861]];
+              console.log(lineArr)
               // 执行轨迹播放
-              startAnimation()
+              // startAnimation()
+              showMapLocus()
               // this.deviceList = this.dataConvert(this.deviceList)
               // markersShow(this.deviceList)
             }
@@ -205,59 +216,73 @@
 
 
 
-  var marker, lineArr = [[116.478935, 39.997761], [116.478939, 39.997825], [116.478912, 39.998549], [116.478912, 39.998549], [116.478998, 39.998555], [116.478998, 39.998555], [116.479282, 39.99856], [116.479658, 39.998528], [116.480151, 39.998453], [116.480784, 39.998302], [116.480784, 39.998302], [116.481149, 39.998184], [116.481573, 39.997997], [116.481863, 39.997846], [116.482072, 39.997718], [116.482362, 39.997718], [116.483633, 39.998935], [116.48367, 39.998968], [116.484648, 39.999861]];
+  var marker = undefined;
+  var lineArr = [];
+  // var lineArr = [[116.478935, 39.997761], [116.478939, 39.997825], [116.478912, 39.998549], [116.478912, 39.998549], [116.478998, 39.998555], [116.478998, 39.998555], [116.479282, 39.99856], [116.479658, 39.998528], [116.480151, 39.998453], [116.480784, 39.998302], [116.480784, 39.998302], [116.481149, 39.998184], [116.481573, 39.997997], [116.481863, 39.997846], [116.482072, 39.997718], [116.482362, 39.997718], [116.483633, 39.998935], [116.48367, 39.998968], [116.484648, 39.999861]];
+  function showMapLocus() {
+    console.log(vueData.deviceNodeInfo.avatar)
+    var map = new AMap.Map("container", {
+      resizeEnable: true,
+      center: lineArr[0],
+      zoom: 17
+    });
+    AMap.plugin([
+      'AMap.ToolBar',
+    ], function () {
+      // 在图面添加工具条控件，工具条控件集成了缩放、平移、定位等功能按钮在内的组合控件
+      map.addControl(new AMap.ToolBar({
+        // 简易缩放模式，默认为 false
+        liteStyle: true
+      }));
+    });
 
-  var map = new AMap.Map("container", {
-    resizeEnable: true,
-    center: [116.397428, 39.90923],
-    zoom: 17
-  });
-  AMap.plugin([
-    'AMap.ToolBar',
-  ], function () {
-    // 在图面添加工具条控件，工具条控件集成了缩放、平移、定位等功能按钮在内的组合控件
-    map.addControl(new AMap.ToolBar({
-      // 简易缩放模式，默认为 false
-      liteStyle: true
-    }));
-  });
-  marker = new AMap.Marker({
-    map: map,
-    position: [116.478935, 39.997761],
-    icon: "https://webapi.amap.com/images/car.png",
-    offset: new AMap.Pixel(-26, -13),
-    autoRotation: true,
-    angle: -90,
-  });
+    let markerDom = `<div class="markerCon" data-index="10">
+                    <img class="avatar" src="${vueData.deviceNodeInfo.avatar}">
+                    <img class="avatarBg" src="./image/avatarBg.png">
+                  </div>`;
+    marker = new AMap.Marker({
+      map: map,
+      position: lineArr[0],
+      content: markerDom,
+      // icon: "https://webapi.amap.com/images/car.png",
+      // offset: new AMap.Pixel(-26, -13),
+      offset: new AMap.Pixel(-15, -40),
+      autoRotation: true,
+      angle: -90,
+    });
 
-  // 绘制轨迹
-  var polyline = new AMap.Polyline({
-    map: map,
-    path: lineArr,
-    showDir: true,
-    strokeColor: "#28F",  //线颜色
-    // strokeOpacity: 1,     //线透明度
-    strokeWeight: 6,      //线宽
-    // strokeStyle: "solid"  //线样式
-  });
+    // 绘制轨迹
+    var polyline = new AMap.Polyline({
+      map: map,
+      path: lineArr,
+      showDir: true,
+      strokeColor: "#28F",  //线颜色
+      // strokeOpacity: 1,     //线透明度
+      strokeWeight: 6,      //线宽
+      // strokeStyle: "solid"  //线样式
+    });
 
-  var passedPolyline = new AMap.Polyline({
-    map: map,
-    // path: lineArr,
-    strokeColor: "#AF5",  //线颜色
-    // strokeOpacity: 1,     //线透明度
-    strokeWeight: 6,      //线宽
-    // strokeStyle: "solid"  //线样式
-  });
+    var passedPolyline = new AMap.Polyline({
+      map: map,
+      // path: lineArr,
+      strokeColor: "#AF5",  //线颜色
+      // strokeOpacity: 1,     //线透明度
+      strokeWeight: 6,      //线宽
+      // strokeStyle: "solid"  //线样式
+    });
 
 
-  marker.on('moving', function (e) {
-    passedPolyline.setPath(e.passedPath);
-  });
+    marker.on('moving', function (e) {
+      passedPolyline.setPath(e.passedPath);
+    });
 
-  map.setFitView();
+    map.setFitView();
+    startAnimation()
+  }
+
 
   function startAnimation() {
+
     marker.moveAlong(lineArr, 200);
   }
 
